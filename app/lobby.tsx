@@ -269,7 +269,8 @@ export function Lobby() {
             <Badge text="Live" tone="success" />
           </div>
 
-          <div className="playground">
+          <div className="canvas-body">
+            <div className="playground">
             <section className="hero-card" data-tour-target="hero-card">
               <div className="hero-copy">
                 <Badge text="Local-first design" tone="neutral" />
@@ -291,38 +292,39 @@ export function Lobby() {
               <Card eyebrow="02 · Change" title="Edit with design controls" icon="◫" emphasis="brand">Adjust spacing, type, colors, and component props while staying in the context of the live page.</Card>
               <Card eyebrow="03 · Review" title="Keep every move legible" icon="⌘">Inspect the diff, preview any checkpoint, and restore without rewriting shared history.</Card>
             </div>
+            </div>
+
+            <aside className="coach-card" id="mission-guide" aria-labelledby="active-mission-title">
+              <div className="coach-topline"><span>{String(MISSIONS.indexOf(active) + 1).padStart(2, "0")}</span><Badge text={active.duration} tone="neutral" /></div>
+              <p className="coach-kicker">{active.kicker}</p>
+              <h2 id="active-mission-title">{active.title}</h2>
+              <p className="coach-summary">{active.summary}</p>
+              <div className="control-location"><span>Find it</span><strong>{active.location}</strong></div>
+              <button className={`reference-shot reference-shot--${active.id}`} type="button" onClick={() => setExpandedShot(active)} aria-label={`Open larger product reference for ${active.title}`}>
+                {/* Native images preserve the exact pixels of these tiny product-reference crops. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={active.image} alt={active.imageAlt} />
+                <span><i /> Observed in Make Local <strong>Open larger ↗</strong></span>
+              </button>
+              <p className="look-for"><strong>What to look for</strong>{active.lookFor}</p>
+              <div className="checklist-heading"><span>Do this in Make Local</span><strong>{activeCheckedSteps.length}/{active.steps.length}</strong></div>
+              <ol className="mission-checklist">
+                {active.steps.map((step, index) => {
+                  const isChecked = activeCheckedSteps.includes(index);
+                  return (
+                    <li key={step}>
+                      <button type="button" aria-pressed={isChecked} className={isChecked ? "is-checked" : ""} onClick={() => toggleStep(active.id, index)}>
+                        <span>{isChecked ? "✓" : index + 1}</span><span>{step}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
+              <div className="outcome"><span aria-hidden="true">◇</span><p><strong>What you’ll learn</strong>{active.outcome}</p></div>
+              <Button label={completed.includes(active.id) ? "Completed" : active.action} variant={completed.includes(active.id) ? "secondary" : "primary"} onClick={() => completeMission(active)} disabled={completed.includes(active.id)} />
+            </aside>
           </div>
         </section>
-
-        <aside className="coach-card" id="mission-guide" aria-labelledby="active-mission-title">
-          <div className="coach-topline"><span>{String(MISSIONS.indexOf(active) + 1).padStart(2, "0")}</span><Badge text={active.duration} tone="neutral" /></div>
-          <p className="coach-kicker">{active.kicker}</p>
-          <h2 id="active-mission-title">{active.title}</h2>
-          <p className="coach-summary">{active.summary}</p>
-          <div className="control-location"><span>Find it</span><strong>{active.location}</strong></div>
-          <button className={`reference-shot reference-shot--${active.id}`} type="button" onClick={() => setExpandedShot(active)} aria-label={`Open larger product reference for ${active.title}`}>
-            {/* Native images preserve the exact pixels of these tiny product-reference crops. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={active.image} alt={active.imageAlt} />
-            <span><i /> Observed in Make Local <strong>Open larger ↗</strong></span>
-          </button>
-          <p className="look-for"><strong>What to look for</strong>{active.lookFor}</p>
-          <div className="checklist-heading"><span>Do this in Make Local</span><strong>{activeCheckedSteps.length}/{active.steps.length}</strong></div>
-          <ol className="mission-checklist">
-            {active.steps.map((step, index) => {
-              const isChecked = activeCheckedSteps.includes(index);
-              return (
-                <li key={step}>
-                  <button type="button" aria-pressed={isChecked} className={isChecked ? "is-checked" : ""} onClick={() => toggleStep(active.id, index)}>
-                    <span>{isChecked ? "✓" : index + 1}</span><span>{step}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-          <div className="outcome"><span aria-hidden="true">◇</span><p><strong>What you’ll learn</strong>{active.outcome}</p></div>
-          <Button label={completed.includes(active.id) ? "Completed" : active.action} variant={completed.includes(active.id) ? "secondary" : "primary"} onClick={() => completeMission(active)} disabled={completed.includes(active.id)} />
-        </aside>
       </div>
 
       {expandedShot && (
