@@ -20,6 +20,8 @@ test("server-renders the Make Local Lobby", async () => {
   assert.match(html, /Make a safe branch/);
   assert.match(html, /Inspect and restore/);
   assert.match(html, /Annotate with context/);
+  assert.match(html, /Figma MCP \+ team workflows/);
+  assert.match(html, /Scope with intent/);
   assert.doesNotMatch(html, /Restore a checkpoint/);
   assert.match(html, /Do this in Make Local/);
   assert.match(html, /tour\/branch-picker\.webp/);

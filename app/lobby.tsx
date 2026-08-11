@@ -114,10 +114,12 @@ const MISSIONS: Mission[] = [
 ];
 
 const LABS = [
-  { number: "01", title: "Mention a token", text: "Annotate a spacing value and @-mention --space-6 from the Tokens results." },
-  { number: "02", title: "Insert an asset", text: "Open Assets and drag a code-connected component into the playground." },
-  { number: "03", title: "Try another branch", text: "Switch to tour/alternate-theme, compare the token changes, then return." },
-  { number: "04", title: "Share for review", text: "Fork the repo, push your workshop branch, and open a pull request from Make Local." },
+  { number: "01", title: "Implement a Design", text: "Paste a focused Figma frame or file link into chat and ask the agent to implement it through Figma MCP. Watch the preview and diff update." },
+  { number: "02", title: "Scope with intent", text: "One component or section is faster to generate and review. Whole pages and system-wide changes take longer, so state the outcome and constraints up front." },
+  { number: "03", title: "Create the library", text: "If the Design library does not exist yet, use Figma MCP to establish its component and variable foundations before implementing the page." },
+  { number: "04", title: "Connect code to Design", text: "Use Figma MCP to inspect the library, then generate or verify Code Connect mappings so the right code components survive the handoff." },
+  { number: "05", title: "Try another branch", text: "Switch to tour/alternate-theme, compare the token changes, then return to your workshop branch." },
+  { number: "06", title: "Share for review", text: "Fork the repo, push your workshop branch, and open a pull request from Make Local." },
 ];
 
 const STORAGE_KEY = "make-local-lobby-progress-v1";
@@ -344,7 +346,7 @@ export function Lobby() {
       )}
 
       <section className="labs-section" aria-labelledby="labs-title">
-        <div className="labs-heading"><div><Badge text="Explore more" tone="neutral" /><h2 id="labs-title">Keep going when curiosity wins.</h2></div><p>The core loop is complete. These optional challenges show how Make Local scales from a quick edit to team collaboration.</p></div>
+        <div className="labs-heading"><div><Badge text="Figma MCP + team workflows" tone="neutral" /><h2 id="labs-title">Keep going when curiosity wins.</h2></div><p>Paste a focused Design reference, watch it become local code, then grow into libraries and Code Connect. Smaller requests move faster; larger changes reward clear intent and patient review.</p></div>
         <div className="labs-grid">{LABS.map((lab) => <article key={lab.number}><span>{lab.number}</span><h3>{lab.title}</h3><p>{lab.text}</p><span className="lab-arrow" aria-hidden="true">↗</span></article>)}</div>
       </section>
 
