@@ -1,6 +1,6 @@
 {
   "codeConnect": {
-    "include": ["app/components/*.figma.ts"],
+    "include": ["figma/*.figma.ts"],
     "label": "Make Local Lobby",
     "language": "jsx",
     "defaultBranch": "main",

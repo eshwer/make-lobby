@@ -35,6 +35,6 @@ test("defines current JSON code properties separately from Code Connect template
     const json = JSON.parse(await readFile(new URL(`../.figma/code-properties/${component}.json`, import.meta.url), "utf8"));
     assert.equal(json.schemaVersion, 1);
     assert.equal(json.source.componentName, component);
-    await access(new URL(`../app/components/${component}.figma.ts`, import.meta.url));
+    await access(new URL(`../figma/${component}.figma.ts`, import.meta.url));
   }
 });

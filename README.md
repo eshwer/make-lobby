@@ -23,7 +23,7 @@ Your changes affect only the clone on your computer until you explicitly push th
 
 - `.figma/make/` contains the complete Make Local bootstrap contract: `setup`, `install`, `dev`, `verify`, `env`, and source-classification settings in `dev.json`.
 - `.figma/code-properties/` defines editable properties for `Button`, `Card`, and `Badge` using Make Local's schema-v1 JSON format.
-- `app/components/*.figma.ts` contains current Code Connect template files for those components.
+- `figma/*.figma.ts` contains current Code Connect template files for those components.
 - `figma.config.json` currently targets public Figma-owned Simple Design System components as development stand-ins. Before a production launch, replace the substitutions with stable node URLs from the dedicated Make Local Lobby library and publish the mappings under the canonical repository.
 
 Code Connect publishing requires a Figma personal access token with Code Connect write access and file read access. Never commit that token.
