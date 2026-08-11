@@ -1,0 +1,13 @@
+{
+  "codeConnect": {
+    "include": ["app/components/*.figma.ts"],
+    "label": "Make Local Lobby",
+    "language": "jsx",
+    "defaultBranch": "main",
+    "documentUrlSubstitutions": {
+      "<FIGMA_LOBBY_BUTTON>": "https://www.figma.com/design/J0KLPKXiONDRssXD1AX9Oi?node-id=4185-3778",
+      "<FIGMA_LOBBY_CARD>": "https://www.figma.com/design/J0KLPKXiONDRssXD1AX9Oi?node-id=2142-11380",
+      "<FIGMA_LOBBY_BADGE>": "https://www.figma.com/design/J0KLPKXiONDRssXD1AX9Oi?node-id=56-8830"
+    }
+  }
+}

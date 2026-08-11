@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+node <<'NODE'
+const url = process.env.FIGMA_MAKE_URL ?? `http://127.0.0.1:${process.env.PORT ?? 3000}`
+const deadline = Date.now() + 30_000
+
+while (Date.now() < deadline) {
+  try {
+    const response = await fetch(url)
+    const html = await response.text()
+    if (response.ok && html.includes('Make Local Lobby')) {
+      console.log(`Make Local Lobby preview ready: ${url}`)
+      process.exit(0)
+    }
+  } catch {}
+  await new Promise((resolve) => setTimeout(resolve, 500))
+}
+
+console.error(`Make Local Lobby preview did not become ready: ${url}`)
+process.exit(1)
+NODE

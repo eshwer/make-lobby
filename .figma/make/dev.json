@@ -1,0 +1,14 @@
+{
+  "installOn": ["package.json", "package-lock.json"],
+  "restartOn": [],
+  "pointAndEdit": {
+    "paths": {
+      "prefer": ["app/lobby.tsx", "app/globals.css"],
+      "deprioritize": [],
+      "local-library": ["app/components/**"],
+      "external-library": [],
+      "exclude": ["app/_sites-preview/**", "**/*.figma.ts", ".figma/**", "tests/**"]
+    },
+    "pathClassification": { "classifier": "catboost-o4" }
+  }
+}

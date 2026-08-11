@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "source": { "componentName": "Card", "filePath": "app/components/ui.tsx" },
+  "codeProperties": {
+    "eyebrow": { "name": "Eyebrow", "type": "string" },
+    "title": { "name": "Title", "type": "string" },
+    "emphasis": {
+      "name": "Emphasis",
+      "type": "string",
+      "defaultValue": "default",
+      "options": ["default", "brand"],
+      "control": { "type": "inline-radio" }
+    }
+  }
+}
