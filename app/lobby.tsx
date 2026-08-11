@@ -59,10 +59,10 @@ const MISSIONS: Mission[] = [
   },
   {
     id: "review",
-    kicker: "Review the work",
-    title: "Inspect the version",
-    duration: "2 min",
-    summary: "See exactly what changed before the work moves anywhere else.",
+    kicker: "Review and recover",
+    title: "Inspect and restore",
+    duration: "3 min",
+    summary: "Inspect the code diff, preview a checkpoint, and recover without deleting history.",
     location: "Top bar → Commits → hover a version → •••",
     image: "/tour/commit-actions.webp",
     imageAlt: "Make Local commit history with Preview commit, View changes, and Restore commit actions open.",
@@ -70,10 +70,28 @@ const MISSIONS: Mission[] = [
     steps: [
       "Open Commits in the top bar and hover the latest version.",
       "Choose •••, then View changes to inspect the code diff.",
-      "Choose Preview commit to compare the running page, then Close preview in the persistent banner.",
+      "On an earlier version, choose ••• → Preview commit, then Restore commit. Confirm a new latest version appears.",
     ],
-    outcome: "A commit is a named checkpoint; a branch is the safe lane that contains a series of checkpoints.",
-    action: "I reviewed the diff",
+    outcome: "Restore creates a new commit with the older snapshot, so the branch keeps a legible record of every checkpoint.",
+    action: "I reviewed and restored",
+  },
+  {
+    id: "annotate",
+    kicker: "Direct the agent",
+    title: "Annotate with context",
+    duration: "2 min",
+    summary: "Pin a request to the exact rendered element and name the component the agent should use.",
+    location: "Preview toolbar → Annotate for agent → select a card",
+    image: "/tour/annotate-for-agent.webp",
+    imageAlt: "Make Local annotation mode showing a selected heading, numbered pin, and Ask for changes composer.",
+    lookFor: "The element gets a blue outline and numbered pin, with an Ask for changes composer anchored beside it.",
+    steps: [
+      "Choose Annotate for agent—the note icon beside Edit in the preview toolbar.",
+      "Click the orange Edit with design controls card to place a numbered annotation pin.",
+      "Type “Use @Card with brand emphasis,” choose Card under Components, submit the note, then Apply it in chat.",
+    ],
+    outcome: "The pin carries element context, while the @Card mention tells the agent which reusable code component should satisfy the request.",
+    action: "I applied the annotation",
   },
   {
     id: "roundtrip",
@@ -93,28 +111,10 @@ const MISSIONS: Mission[] = [
     outcome: "Code Connect can replace matching DOM output with real library instances and carry supported props across the handoff.",
     action: "My update is back",
   },
-  {
-    id: "restore",
-    kicker: "Recover with confidence",
-    title: "Restore a checkpoint",
-    duration: "1 min",
-    summary: "Return to a known-good state without deleting the story of how you got there.",
-    location: "Commits → hover a version → ••• → Restore commit",
-    image: "/tour/commit-actions.webp",
-    imageAlt: "Make Local commit menu showing the Restore commit action beneath Preview commit and View changes.",
-    lookFor: "Restore is beside Preview and View changes; it does not erase the commits that came after it.",
-    steps: [
-      "Open Commits and hover the version from before your Design update.",
-      "Choose •••, then Preview commit to confirm the state.",
-      "Choose Restore commit. Confirm a new latest version appears with the restored snapshot.",
-    ],
-    outcome: "Restore creates a new commit with the older snapshot. Intervening history remains available.",
-    action: "I restored safely",
-  },
 ];
 
 const LABS = [
-  { number: "01", title: "Direct the agent", text: "Select one card and ask the agent to make only that card more prominent." },
+  { number: "01", title: "Mention a token", text: "Annotate a spacing value and @-mention --space-6 from the Tokens results." },
   { number: "02", title: "Insert an asset", text: "Open Assets and drag a code-connected component into the playground." },
   { number: "03", title: "Try another branch", text: "Switch to tour/alternate-theme, compare the token changes, then return." },
   { number: "04", title: "Share for review", text: "Fork the repo, push your workshop branch, and open a pull request from Make Local." },
@@ -145,7 +145,8 @@ export function Lobby() {
         const stored = window.localStorage.getItem(STORAGE_KEY);
         if (stored) {
           const progress = JSON.parse(stored);
-          setCompleted(progress.completed ?? []);
+          const validMissionIds = new Set(MISSIONS.map((mission) => mission.id));
+          setCompleted((progress.completed ?? []).filter((id: string) => validMissionIds.has(id)));
           setCheckedSteps(progress.checkedSteps ?? {});
         }
       } catch {
@@ -243,7 +244,7 @@ export function Lobby() {
 
       <div className="workspace">
         <nav className="mission-rail" aria-label="Quick tour missions">
-          <div className="rail-heading"><span>Quick tour</span><small>about 8 min</small></div>
+          <div className="rail-heading"><span>Quick tour</span><small>about 10 min</small></div>
           <ol>
             {MISSIONS.map((mission, index) => {
               const isDone = completed.includes(mission.id);

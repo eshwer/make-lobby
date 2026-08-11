@@ -18,6 +18,9 @@ test("server-renders the Make Local Lobby", async () => {
   assert.match(html, /<title>Make Local Lobby<\/title>/i);
   assert.match(html, /Design in the real thing/);
   assert.match(html, /Make a safe branch/);
+  assert.match(html, /Inspect and restore/);
+  assert.match(html, /Annotate with context/);
+  assert.doesNotMatch(html, /Restore a checkpoint/);
   assert.match(html, /Do this in Make Local/);
   assert.match(html, /tour\/branch-picker\.webp/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
@@ -42,7 +45,7 @@ test("defines current JSON code properties separately from Code Connect template
 });
 
 test("ships real-product visual references for the guided missions", async () => {
-  for (const image of ["branch-picker", "design-mode", "commit-actions", "copy-designs"]) {
+  for (const image of ["branch-picker", "design-mode", "commit-actions", "annotate-for-agent", "copy-designs"]) {
     await access(new URL(`../public/tour/${image}.webp`, import.meta.url));
   }
 });

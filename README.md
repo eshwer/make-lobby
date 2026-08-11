@@ -1,6 +1,6 @@
 # Make Local Lobby
 
-A small, public-safe playground for learning Figma Make Local by using the real product: create a branch, point at rendered UI, edit source-backed properties, review the Git diff, round-trip the result into Figma Design, and restore a checkpoint.
+A small, public-safe playground for learning Figma Make Local by using the real product: create a branch, edit rendered UI, review and restore Git checkpoints, annotate an element with an @-mentioned code component, and round-trip the result into Figma Design.
 
 ## Open the lobby
 
