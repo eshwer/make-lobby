@@ -9,6 +9,10 @@ type Mission = {
   title: string;
   duration: string;
   summary: string;
+  location: string;
+  image: string;
+  imageAlt: string;
+  lookFor: string;
   steps: string[];
   outcome: string;
   action: string;
@@ -22,10 +26,14 @@ const MISSIONS: Mission[] = [
     title: "Make a safe branch",
     duration: "1 min",
     summary: "Keep main stable while you experiment in your own workspace.",
+    location: "Bottom bar → main → Create branch…",
+    image: "/tour/branch-picker.webp",
+    imageAlt: "Make Local branch picker showing main and the Create branch action.",
+    lookFor: "The current branch sits below the prompt box—not in the top toolbar.",
     steps: [
-      "Open the branch picker in Make Local.",
-      "Choose Create branch…",
-      "Create and check out workshop/<your-name> from main.",
+      "At the bottom of the agent panel, click the current branch name: main.",
+      "Choose Create branch… in the dark branch menu.",
+      "Name it workshop/<your-name>, then choose Create and check out.",
     ],
     outcome: "You are now working on an isolated branch. Make Local can save agent edits as versioned commits here.",
     action: "I’m on my branch",
@@ -36,10 +44,14 @@ const MISSIONS: Mission[] = [
     title: "Make the CTA bigger",
     duration: "2 min",
     summary: "Select the real rendered button and change its source-backed properties.",
+    location: "Preview toolbar → Edit → select the blue CTA",
+    image: "/tour/design-mode.webp",
+    imageAlt: "Make Local Design mode with a rendered heading selected and the properties panel open on the right.",
+    lookFor: "A blue outline appears on the page and the right panel changes from Page styles to the selected element.",
     steps: [
-      "Enter Design mode and select the blue Start designing button.",
-      "In Properties, change Size from Medium to Large.",
-      "Try swapping its horizontal padding to --space-6, then apply the staged edit.",
+      "In the preview toolbar, choose Edit—the cursor-with-spark icon.",
+      "Click the blue Start designing button. Confirm its blue outline and right-hand panel.",
+      "Under Properties, change Size from Medium to Large, then apply the pending edit.",
     ],
     outcome: "The visual change becomes a focused code edit, and the preview hot-reloads in place.",
     action: "Check my button",
@@ -51,10 +63,14 @@ const MISSIONS: Mission[] = [
     title: "Inspect the version",
     duration: "2 min",
     summary: "See exactly what changed before the work moves anywhere else.",
+    location: "Top bar → Commits → hover a version → •••",
+    image: "/tour/commit-actions.webp",
+    imageAlt: "Make Local commit history with Preview commit, View changes, and Restore commit actions open.",
+    lookFor: "The action menu only appears after you hover a commit row and choose its three dots.",
     steps: [
-      "Open Commits in the Make Local toolbar.",
-      "Choose View changes on the latest version.",
-      "Preview the prior commit, then choose Close preview.",
+      "Open Commits in the top bar and hover the latest version.",
+      "Choose •••, then View changes to inspect the code diff.",
+      "Choose Preview commit to compare the running page, then Close preview in the persistent banner.",
     ],
     outcome: "A commit is a named checkpoint; a branch is the safe lane that contains a series of checkpoints.",
     action: "I reviewed the diff",
@@ -65,10 +81,14 @@ const MISSIONS: Mission[] = [
     title: "Send it to Design",
     duration: "2 min",
     summary: "Turn the running page into editable Figma layers without rebuilding it by hand.",
+    location: "Preview toolbar → Copy designs → Ready to send",
+    image: "/tour/copy-designs.webp",
+    imageAlt: "Make Local Ready to send toolbar with Copy to clipboard, a recent file, and New file options.",
+    lookFor: "Copy designs opens a dark Ready to send toolbar at the bottom of the preview.",
     steps: [
-      "Choose Copy designs in the Make Local toolbar.",
-      "Select New file, or copy and paste into an open Design file.",
-      "Edit the frame in Figma Desktop and choose Update Make.",
+      "Choose Copy designs—the outlined-layers icon in the preview toolbar.",
+      "Choose Copy to clipboard, or open its arrow to send to a recent Design file or New file.",
+      "Edit the attached frame in Figma Desktop; after a change, choose Update Make in its toolbelt.",
     ],
     outcome: "Code Connect can replace matching DOM output with real library instances and carry supported props across the handoff.",
     action: "My update is back",
@@ -79,10 +99,14 @@ const MISSIONS: Mission[] = [
     title: "Restore a checkpoint",
     duration: "1 min",
     summary: "Return to a known-good state without deleting the story of how you got there.",
+    location: "Commits → hover a version → ••• → Restore commit",
+    image: "/tour/commit-actions.webp",
+    imageAlt: "Make Local commit menu showing the Restore commit action beneath Preview commit and View changes.",
+    lookFor: "Restore is beside Preview and View changes; it does not erase the commits that came after it.",
     steps: [
-      "Open Commits and find the version before your Design update.",
-      "Choose Preview commit to confirm the state.",
-      "Choose Restore commit, then return to the latest preview.",
+      "Open Commits and hover the version from before your Design update.",
+      "Choose •••, then Preview commit to confirm the state.",
+      "Choose Restore commit. Confirm a new latest version appears with the restored snapshot.",
     ],
     outcome: "Restore creates a new commit with the older snapshot. Intervening history remains available.",
     action: "I restored safely",
@@ -110,14 +134,20 @@ function FigmaMark() {
 export function Lobby() {
   const [activeId, setActiveId] = useState(MISSIONS[0].id);
   const [completed, setCompleted] = useState<string[]>([]);
+  const [checkedSteps, setCheckedSteps] = useState<Record<string, number[]>>({});
+  const [expandedShot, setExpandedShot] = useState<Mission | null>(null);
   const [ready, setReady] = useState(false);
-  const [notice, setNotice] = useState("Choose the first mission when you’re ready.");
+  const [notice, setNotice] = useState("Start with the branch control below the agent panel.");
 
   useEffect(() => {
     const hydrate = window.setTimeout(() => {
       try {
         const stored = window.localStorage.getItem(STORAGE_KEY);
-        if (stored) setCompleted(JSON.parse(stored).completed ?? []);
+        if (stored) {
+          const progress = JSON.parse(stored);
+          setCompleted(progress.completed ?? []);
+          setCheckedSteps(progress.checkedSteps ?? {});
+        }
       } catch {
         // Progress is helpful, never required.
       }
@@ -128,13 +158,39 @@ export function Lobby() {
 
   useEffect(() => {
     if (!ready) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, completed }));
-  }, [completed, ready]);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, completed, checkedSteps }));
+  }, [checkedSteps, completed, ready]);
+
+  useEffect(() => {
+    if (!expandedShot) return;
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setExpandedShot(null);
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [expandedShot]);
 
   const active = useMemo(() => MISSIONS.find((mission) => mission.id === activeId) ?? MISSIONS[0], [activeId]);
   const progress = Math.round((completed.length / MISSIONS.length) * 100);
+  const activeCheckedSteps = checkedSteps[active.id] ?? [];
+
+  function toggleStep(missionId: string, stepIndex: number) {
+    setCheckedSteps((current) => {
+      const missionSteps = current[missionId] ?? [];
+      const next = missionSteps.includes(stepIndex)
+        ? missionSteps.filter((index) => index !== stepIndex)
+        : [...missionSteps, stepIndex];
+      return { ...current, [missionId]: next };
+    });
+  }
 
   function completeMission(mission: Mission) {
+    const missionSteps = checkedSteps[mission.id] ?? [];
+    if (missionSteps.length < mission.steps.length) {
+      setNotice(`Check off all ${mission.steps.length} steps in “${mission.title}” first.`);
+      return;
+    }
+
     if (mission.validator === "large-button") {
       const target = document.querySelector<HTMLElement>("[data-tour-target='hero-cta']");
       if (target?.dataset.size !== "large") {
@@ -152,8 +208,9 @@ export function Lobby() {
 
   function resetTour() {
     setCompleted([]);
+    setCheckedSteps({});
     setActiveId(MISSIONS[0].id);
-    setNotice("Progress reset. Your Git history and code are unchanged.");
+    setNotice("Tour progress reset. Your Git history and code are unchanged.");
   }
 
   return (
@@ -175,7 +232,7 @@ export function Lobby() {
         <div>
           <Badge text="5–10 minute quick tour" tone="brand" />
           <h1>Design in the real thing.</h1>
-          <p>Make visual changes directly in your local codebase, save them safely with Git, and carry the result back into Figma Design.</p>
+          <p>Keep this page open in the preview. Each mission points to the real Make Local controls surrounding it, then gives you a change to make and verify.</p>
         </div>
         <div className="intro-progress" aria-label={`${progress}% of tour complete`}>
           <div className="progress-copy"><span>Your progress</span><strong>{completed.length}/{MISSIONS.length}</strong></div>
@@ -237,16 +294,51 @@ export function Lobby() {
           </div>
         </section>
 
-        <aside className="coach-card" aria-labelledby="active-mission-title">
+        <aside className="coach-card" id="mission-guide" aria-labelledby="active-mission-title">
           <div className="coach-topline"><span>{String(MISSIONS.indexOf(active) + 1).padStart(2, "0")}</span><Badge text={active.duration} tone="neutral" /></div>
           <p className="coach-kicker">{active.kicker}</p>
           <h2 id="active-mission-title">{active.title}</h2>
           <p className="coach-summary">{active.summary}</p>
-          <ol>{active.steps.map((step) => <li key={step}>{step}</li>)}</ol>
+          <div className="control-location"><span>Find it</span><strong>{active.location}</strong></div>
+          <button className={`reference-shot reference-shot--${active.id}`} type="button" onClick={() => setExpandedShot(active)} aria-label={`Open larger product reference for ${active.title}`}>
+            {/* Native images preserve the exact pixels of these tiny product-reference crops. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={active.image} alt={active.imageAlt} />
+            <span><i /> Observed in Make Local <strong>Open larger ↗</strong></span>
+          </button>
+          <p className="look-for"><strong>What to look for</strong>{active.lookFor}</p>
+          <div className="checklist-heading"><span>Do this in Make Local</span><strong>{activeCheckedSteps.length}/{active.steps.length}</strong></div>
+          <ol className="mission-checklist">
+            {active.steps.map((step, index) => {
+              const isChecked = activeCheckedSteps.includes(index);
+              return (
+                <li key={step}>
+                  <button type="button" aria-pressed={isChecked} className={isChecked ? "is-checked" : ""} onClick={() => toggleStep(active.id, index)}>
+                    <span>{isChecked ? "✓" : index + 1}</span><span>{step}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
           <div className="outcome"><span aria-hidden="true">◇</span><p><strong>What you’ll learn</strong>{active.outcome}</p></div>
           <Button label={completed.includes(active.id) ? "Completed" : active.action} variant={completed.includes(active.id) ? "secondary" : "primary"} onClick={() => completeMission(active)} disabled={completed.includes(active.id)} />
         </aside>
       </div>
+
+      {expandedShot && (
+        <div className="shot-modal" role="dialog" aria-modal="true" aria-labelledby="shot-modal-title">
+          <button className="shot-modal__backdrop" type="button" aria-label="Close product reference" onClick={() => setExpandedShot(null)} />
+          <div className={`shot-modal__card shot-modal__card--${expandedShot.id}`}>
+            <div className="shot-modal__header">
+              <div><span>Real Make Local reference</span><h2 id="shot-modal-title">{expandedShot.title}</h2></div>
+              <button type="button" onClick={() => setExpandedShot(null)} aria-label="Close product reference">Close ×</button>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={expandedShot.image} alt={expandedShot.imageAlt} />
+            <p><strong>{expandedShot.location}</strong>{expandedShot.lookFor}</p>
+          </div>
+        </div>
+      )}
 
       <section className="labs-section" aria-labelledby="labs-title">
         <div className="labs-heading"><div><Badge text="Explore more" tone="neutral" /><h2 id="labs-title">Keep going when curiosity wins.</h2></div><p>The core loop is complete. These optional challenges show how Make Local scales from a quick edit to team collaboration.</p></div>

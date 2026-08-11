@@ -19,6 +19,8 @@ A small, public-safe playground for learning Figma Make Local by using the real 
 
 Your changes affect only the clone on your computer until you explicitly push them. The first mission creates a personal `workshop/<name>` branch so `main` remains reusable.
 
+Each mission includes a cropped reference from the real Make Local interface, an exact control path, and a checkable sequence. The screenshots contain no account data and are included only to help learners recognize the surrounding product controls.
+
 ## What is configured
 
 - `.figma/make/` contains the complete Make Local bootstrap contract: `setup`, `install`, `dev`, `verify`, `env`, and source-classification settings in `dev.json`.
