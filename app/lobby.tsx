@@ -234,8 +234,8 @@ export function Lobby() {
       <section className="intro" id="top">
         <div>
           <Badge text="5–10 minute quick tour" tone="brand" />
-          <h1>Design in the real thing.</h1>
-          <p>Keep this page open in the preview. Each mission points to the real Make Local controls surrounding it, then gives you a change to make and verify.</p>
+          <h1>Design on code</h1>
+          <p>Take a tour to understand the features available in Make. </p>
         </div>
         <div className="intro-progress" aria-label={`${progress}% of tour complete`}>
           <div className="progress-copy"><span>Your progress</span><strong>{completed.length}/{MISSIONS.length}</strong></div>
@@ -273,30 +273,6 @@ export function Lobby() {
           </div>
 
           <div className="canvas-body">
-            <div className="playground">
-            <section className="hero-card" data-tour-target="hero-card">
-              <div className="hero-copy">
-                <Badge text="Local-first design" tone="neutral" />
-                <h2>From intent to interface,<br /><span>without the handoff gap.</span></h2>
-                <p>Explore freely in a safe branch. Every meaningful change becomes reviewable code, ready for your team.</p>
-                <div className="hero-actions">
-                  <Button label="Start designing" size="medium" data-tour-target="hero-cta" />
-                  <span className="hero-hint">← Your first edit target</span>
-                </div>
-              </div>
-              <div className="hero-art" aria-hidden="true">
-                <div className="art-frame"><div className="art-toolbar" /><div className="art-sidebar" /><div className="art-object art-object--a" /><div className="art-object art-object--b" /></div>
-                <div className="cursor cursor--blue">M</div><div className="cursor cursor--pink">A</div>
-              </div>
-            </section>
-
-            <div className="feature-grid" data-tour-target="feature-grid">
-              <Card eyebrow="01 · Select" title="Point at what you mean" icon="⌖">Select any rendered element. Make Local traces it back to the component and source that produced it.</Card>
-              <Card eyebrow="02 · Change" title="Edit with design controls" icon="◫" emphasis="brand">Adjust spacing, type, colors, and component props while staying in the context of the live page.</Card>
-              <Card eyebrow="03 · Review" title="Keep every move legible" icon="⌘">Inspect the diff, preview any checkpoint, and restore without rewriting shared history.</Card>
-            </div>
-            </div>
-
             <aside className="coach-card" id="mission-guide" aria-labelledby="active-mission-title">
               <div className="coach-topline"><span>{String(MISSIONS.indexOf(active) + 1).padStart(2, "0")}</span><Badge text={active.duration} tone="neutral" /></div>
               <p className="coach-kicker">{active.kicker}</p>
@@ -326,6 +302,30 @@ export function Lobby() {
               <div className="outcome"><span aria-hidden="true">◇</span><p><strong>What you’ll learn</strong>{active.outcome}</p></div>
               <Button label={completed.includes(active.id) ? "Completed" : active.action} variant={completed.includes(active.id) ? "secondary" : "primary"} onClick={() => completeMission(active)} disabled={completed.includes(active.id)} />
             </aside>
+
+            <div className="playground">
+            <section className="hero-card" data-tour-target="hero-card">
+              <div className="hero-copy">
+                <Badge text="Local-first design" tone="neutral" />
+                <h2>From intent to interface,<br /><span>without the handoff gap.</span></h2>
+                <p>Explore freely in a safe branch. Every meaningful change becomes reviewable code, ready for your team.</p>
+                <div className="hero-actions">
+                  <Button label="Start designing" size="medium" data-tour-target="hero-cta" />
+                  <span className="hero-hint">← Your first edit target</span>
+                </div>
+              </div>
+              <div className="hero-art" aria-hidden="true">
+                <div className="art-frame"><div className="art-toolbar" /><div className="art-sidebar" /><div className="art-object art-object--a" /><div className="art-object art-object--b" /></div>
+                <div className="cursor cursor--blue">M</div><div className="cursor cursor--pink">A</div>
+              </div>
+            </section>
+
+            <div className="feature-grid" data-tour-target="feature-grid">
+              <Card eyebrow="01 · Select" title="Point at what you mean" icon="⌖">Select any rendered element. Make Local traces it back to the component and source that produced it.</Card>
+              <Card eyebrow="02 · Change" title="Edit with design controls" icon="◫" emphasis="brand">Adjust spacing, type, colors, and component props while staying in the context of the live page.</Card>
+              <Card eyebrow="03 · Review" title="Keep every move legible" icon="⌘">Inspect the diff, preview any checkpoint, and restore without rewriting shared history.</Card>
+            </div>
+            </div>
           </div>
         </section>
       </div>

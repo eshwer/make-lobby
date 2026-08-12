@@ -96,7 +96,7 @@ a { color: inherit; text-decoration: none; }
 .rail-note strong { color: var(--ink); }
 
 .canvas { background: #ecece8; min-width: 0; overflow: hidden; }
-.canvas-body { min-height: 720px; display: grid; grid-template-columns: minmax(360px, 1fr) 350px; }
+.canvas-body { min-height: 720px; display: flex; grid-template-columns: minmax(360px, 1fr) 350px; }
 .canvas-toolbar { height: 46px; justify-content: space-between; border-bottom: 1px solid #d7d7d1; padding: 0 15px; background: #f8f8f5; color: var(--muted); font-size: 10px; }
 .canvas-toolbar > div { display: flex; gap: 5px; }
 .canvas-dot { width: 8px; height: 8px; border-radius: 50%; display: block; }

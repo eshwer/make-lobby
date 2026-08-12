@@ -2,8 +2,14 @@
 set -euo pipefail
 
 node <<'NODE'
-const url = process.env.FIGMA_MAKE_URL ?? `http://127.0.0.1:${process.env.PORT ?? 3000}`
-const deadline = Date.now() + 30_000
+// Use localhost (not 127.0.0.1): `vinext dev` binds to the IPv6 loopback
+// ([::1]:PORT) only and does not honor --host, so an IPv4 127.0.0.1 URL is
+// refused even while the preview is healthy. localhost resolves to whatever
+// the server actually bound to, so Node's fetch reaches it.
+const url = process.env.FIGMA_MAKE_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
+// First request triggers the vinext/Cloudflare Workers build, which can take
+// longer than a stock 30s on a cold start; give it room so setup is reliable.
+const deadline = Date.now() + 90_000
 
 while (Date.now() < deadline) {
   try {
