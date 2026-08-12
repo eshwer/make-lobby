@@ -1,14 +1,108 @@
 {
-  "installOn": ["package.json", "package-lock.json"],
+  "installOn": [
+    "package.json",
+    "package-lock.json"
+  ],
   "restartOn": [],
   "pointAndEdit": {
     "paths": {
-      "prefer": ["app/lobby.tsx", "app/globals.css"],
-      "deprioritize": [],
-      "local-library": ["app/components/**"],
+      "prefer": [
+        "app/lobby.tsx",
+        "app/page.tsx",
+        "app/layout.tsx"
+      ],
+      "deprioritize": [
+        "app/globals.css",
+        "app/components/ui.tsx"
+      ],
+      "local-library": [],
       "external-library": [],
-      "exclude": ["app/_sites-preview/**", "**/*.figma.ts", ".figma/**", "tests/**"]
+      "exclude": [
+        "figma/**",
+        "tests/**",
+        "worker/**",
+        ".figma/**",
+        ".wrangler/**",
+        "public/**",
+        "node_modules/**",
+        "dist/**",
+        "*.config.ts",
+        "*.config.mjs",
+        "next-env.d.ts",
+        "tsconfig.json",
+        "package.json",
+        "package-lock.json"
+      ]
     },
-    "pathClassification": { "classifier": "catboost-o4" }
+    "pathClassification": {
+      "classifier": "sonnet"
+    },
+    "exclusions": [
+      {
+        "glob": "figma/**",
+        "reason": "Code Connect mapping files (*.figma.ts) map Figma design components to code implementations but do not own rendered UI and must not be selected as point-and-edit source anchors."
+      },
+      {
+        "glob": "tests/**",
+        "reason": "Test files are not UI source anchors; they assert behavior but do not participate in rendering."
+      },
+      {
+        "glob": "worker/**",
+        "reason": "Cloudflare Worker server entry point — server-side infrastructure, not involved in rendering UI components."
+      },
+      {
+        "glob": ".figma/**",
+        "reason": "Figma tooling configuration, code-connect metadata, and Make Local setup scripts — not UI source."
+      },
+      {
+        "glob": ".wrangler/**",
+        "reason": "Wrangler build state and cache files — not UI source."
+      },
+      {
+        "glob": "public/**",
+        "reason": "Static assets (images, SVGs) — not UI source anchors."
+      },
+      {
+        "glob": "node_modules/**",
+        "reason": "External dependencies — immutable in this project and not UI source anchors for point-and-edit edits."
+      },
+      {
+        "glob": "dist/**",
+        "reason": "Build output — generated, not authored UI source."
+      },
+      {
+        "glob": "*.config.ts",
+        "reason": "Tooling configuration files (vite.config.ts, next.config.ts) — not UI source anchors."
+      },
+      {
+        "glob": "*.config.mjs",
+        "reason": "Tooling configuration files (eslint.config.mjs) — not UI source anchors."
+      },
+      {
+        "glob": "next-env.d.ts",
+        "reason": "Auto-generated Next.js TypeScript environment declarations — not UI source."
+      },
+      {
+        "glob": "tsconfig.json",
+        "reason": "TypeScript compiler configuration — not a UI source anchor."
+      },
+      {
+        "glob": "package.json",
+        "reason": "Package manifest — not a UI source anchor."
+      },
+      {
+        "glob": "package-lock.json",
+        "reason": "Lockfile — not a UI source anchor."
+      }
+    ],
+    "generated": {
+      "schemaVersion": 1,
+      "source": "setup-agent.point-and-edit-path-classifier",
+      "prompt": "same-turn-setup-subagent-v3",
+      "model": "claude-sonnet-4-6",
+      "createdAt": "2026-08-12T00:00:00.000Z",
+      "confidence": 0.97,
+      "explanation": "The repository is a small, well-structured single-app Next.js/Vite project with clear separation between the active composition surface (app/lobby.tsx, app/page.tsx), a local-library component file (app/components/ui.tsx with stable exports and Code Connect mappings), and Code Connect mapping files in figma/ that must be excluded — boundaries are unambiguous and confidence is very high."
+    }
   }
 }
