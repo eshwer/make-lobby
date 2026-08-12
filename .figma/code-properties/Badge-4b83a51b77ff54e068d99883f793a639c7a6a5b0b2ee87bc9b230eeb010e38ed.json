@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "componentName": "Badge",
+    "filePath": "app/components/ui.tsx"
+  },
+  "codeProperties": {
+    "text": {
+      "name": "Text",
+      "type": "string"
+    },
+    "tone": {
+      "name": "Tone",
+      "type": "string",
+      "defaultValue": "neutral",
+      "options": [
+        "neutral",
+        "brand",
+        "success"
+      ],
+      "control": {
+        "type": "select",
+        "labels": {
+          "neutral": "Neutral",
+          "brand": "Brand",
+          "success": "Success"
+        }
+      }
+    }
+  }
+}
