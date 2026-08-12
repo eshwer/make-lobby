@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "componentName": "LabCard",
+    "filePath": "app/components/ui.tsx"
+  },
+  "codeProperties": {
+    "number": {
+      "name": "Number",
+      "type": "string"
+    },
+    "title": {
+      "name": "Title",
+      "type": "string"
+    }
+  }
+}
