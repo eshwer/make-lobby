@@ -65,17 +65,19 @@ export function LabCard({
   number,
   title,
   children,
+  showArrow = true,
 }: {
   number: string;
   title: string;
   children: ReactNode;
+  showArrow?: boolean;
 }) {
   return (
     <article>
       <span>{number}</span>
       <h3>{title}</h3>
       <p>{children}</p>
-      <span className="lab-arrow" aria-hidden="true">↗</span>
+      {showArrow && <span className="lab-arrow" aria-hidden="true">↗</span>}
     </article>
   );
 }

@@ -347,7 +347,7 @@ export function Lobby() {
 
       <section className="labs-section" aria-labelledby="labs-title">
         <div className="labs-heading"><div><Badge text="Figma MCP + team workflows" tone="neutral" /><h2 id="labs-title">There's more to try! </h2></div><p>Paste a focused Design reference, watch it become local code, then grow into libraries and Code Connect. Smaller requests move faster; larger changes reward clear intent and patient review.</p></div>
-        <div className="labs-grid">{LABS.map((lab) => <LabCard key={lab.number} number={lab.number} title={lab.title}>{lab.text}</LabCard>)}</div>
+        <div className="labs-grid">{LABS.map((lab) => <LabCard key={lab.number} number={lab.number} title={lab.title} showArrow={false}>{lab.text}</LabCard>)}</div>
       </section>
 
       <footer><FigmaMark /><p>Make Local Lobby · A safe place to learn by making.</p><span>Everything stays on your machine until you choose to share it.</span></footer>
