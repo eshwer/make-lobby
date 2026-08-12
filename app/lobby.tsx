@@ -292,8 +292,7 @@ export function Lobby() {
             })}
           </ol>
           <div className="outcome"><span aria-hidden="true">◇</span><p><strong>What you’ll learn</strong>{active.outcome}</p></div>
-          <Button label={completed.includes(active.id) ? "Completed" : active.action} variant={completed.includes(active.id) ? "secondary" : "primary"} onClick={() => completeMission(active)} disabled={completed.includes(active.id)} />
-          <p className="coach-feedback" aria-live="polite">{notice}</p>
+          <Button label={completed.includes(active.id) ? "Completed" : active.action} variant={completed.includes(active.id) ? "secondary" : "primary"} onClick={() => completeMission(active)} disabled={completed.includes(active.id) || activeCheckedSteps.length < active.steps.length} />
         </aside>
 
         <section className="canvas" aria-label="Editable playground">
