@@ -5,8 +5,8 @@
 import figma from "figma";
 
 const instance = figma.selectedInstance;
-const text = instance.getString("Label");
-const tone = instance.getEnum("Scheme", { Neutral: "neutral", Positive: "success", Warning: "brand", Danger: "brand" });
+const text = instance.getString("Text");
+const tone = instance.getEnum("Tone", { Neutral: "neutral", Brand: "brand", Success: "success" });
 
 export default {
   id: "make-local-lobby-badge",

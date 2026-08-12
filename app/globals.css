@@ -5,8 +5,8 @@
   --line: #deded8;
   --paper: #fcfcf9;
   --white: #ffffff;
-  --brand-blue: #5551ff;
-  --brand-blue-dark: #3d38da;
+  --brand-blue: #0d99ff;
+  --brand-blue-dark: #0a7ed6;
   --brand-purple: #a259ff;
   --brand-red: #f24e1e;
   --brand-orange: #ff7262;
@@ -69,10 +69,10 @@ a { color: inherit; text-decoration: none; }
 
 .badge { width: fit-content; display: inline-flex; align-items: center; min-height: 24px; padding: 4px 9px; border-radius: 99px; font-size: 10px; line-height: 1; font-weight: 720; letter-spacing: .035em; text-transform: uppercase; white-space: nowrap; }
 .badge--neutral { background: #eeeeda; color: #515140; }
-.badge--brand { background: #e9e8ff; color: #4945c9; }
+.badge--brand { background: #e2f1ff; color: #0a63b5; }
 .badge--success { background: #dff7ec; color: #147253; }
 
-.workspace { width: calc(100% - clamp(24px, 4vw, 64px)); max-width: 1580px; margin: 0 auto; display: grid; grid-template-columns: 246px minmax(0, 1fr); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; background: var(--white); box-shadow: var(--shadow); min-height: 720px; }
+.workspace { width: calc(100% - clamp(24px, 4vw, 64px)); max-width: 1580px; margin: 0 auto; display: grid; grid-template-columns: 246px 340px minmax(0, 1fr); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; background: var(--white); box-shadow: var(--shadow); min-height: 720px; }
 .mission-rail { border-right: 1px solid var(--line); padding: 22px 14px; display: flex; flex-direction: column; background: #fafaf7; }
 .rail-heading { display: flex; justify-content: space-between; align-items: baseline; padding: 0 10px 16px; font-size: 12px; font-weight: 720; }
 .rail-heading small { color: var(--muted); font-size: 10px; font-weight: 500; }
@@ -101,8 +101,8 @@ a { color: inherit; text-decoration: none; }
 .canvas-toolbar > div { display: flex; gap: 5px; }
 .canvas-dot { width: 8px; height: 8px; border-radius: 50%; display: block; }
 .canvas-dot--red { background: #ff7262; }.canvas-dot--yellow { background: #ffc83d; }.canvas-dot--green { background: #0acf83; }
-.playground { padding: clamp(18px, 2.6vw, 34px); }
-.hero-card { min-height: 360px; border-radius: 18px; background: #d9d8ff; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(240px, .85fr); overflow: hidden; position: relative; }
+.playground { flex: 1; padding: clamp(18px, 2.6vw, 34px); }
+.hero-card { min-height: 360px; border-radius: 18px; background: #d6ecff; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(240px, .85fr); overflow: hidden; position: relative; }
 .hero-copy { padding: clamp(28px, 4vw, 54px); position: relative; z-index: 2; }
 .hero-copy h2 { font-size: clamp(32px, 3.5vw, 55px); line-height: .98; letter-spacing: -.055em; margin: 22px 0 18px; font-weight: 650; }
 .hero-copy h2 span { color: var(--brand-blue-dark); }
@@ -123,12 +123,12 @@ a { color: inherit; text-decoration: none; }
 .button-arrow { font-size: 14px; }
 
 .hero-art { position: relative; min-height: 340px; }
-.art-frame { position: absolute; width: 330px; height: 250px; left: 50%; top: 54%; transform: translate(-44%, -50%) rotate(-3deg); background: white; border: 1px solid #b9b7e3; border-radius: 12px; box-shadow: 0 18px 45px rgba(61,56,218,.18); overflow: hidden; }
+.art-frame { position: absolute; width: 330px; height: 250px; left: 50%; top: 54%; transform: translate(-44%, -50%) rotate(-3deg); background: white; border: 1px solid #b7d7f2; border-radius: 12px; box-shadow: 0 18px 45px rgba(13,153,255,.18); overflow: hidden; }
 .art-toolbar { height: 30px; background: #f4f4f0; border-bottom: 1px solid #ddd; }
 .art-sidebar { width: 58px; height: 220px; background: #fbfbf8; border-right: 1px solid #ddd; }
 .art-object { position: absolute; border-radius: 5px; }
 .art-object--a { width: 155px; height: 65px; left: 98px; top: 64px; background: var(--brand-blue); }
-.art-object--b { width: 100px; height: 72px; left: 120px; top: 151px; border: 2px dashed var(--brand-purple); background: #eee8ff; }
+.art-object--b { width: 100px; height: 72px; left: 120px; top: 151px; border: 2px dashed var(--brand-blue); background: #e2f1ff; }
 .cursor { position: absolute; width: 26px; height: 22px; clip-path: polygon(0 0, 100% 45%, 60% 61%, 45% 100%); color: white; font-size: 8px; font-weight: 800; padding: 3px; }
 .cursor--blue { left: 22%; top: 27%; background: var(--brand-blue); transform: rotate(12deg); }
 .cursor--pink { right: 9%; bottom: 24%; background: #e94fad; transform: rotate(-8deg); }
@@ -142,7 +142,7 @@ a { color: inherit; text-decoration: none; }
 .feature-card h3 { margin: 25px 0 9px; font-size: 16px; line-height: 1.15; letter-spacing: -.025em; }
 .feature-card p { color: var(--muted); margin: 0; font-size: 10px; line-height: 1.55; }
 
-.coach-card { min-width: 0; border-left: 1px solid var(--line); padding: 25px 23px; background: var(--white); display: flex; flex-direction: column; }
+.coach-card { min-width: 0; border-right: 1px solid var(--line); padding: 25px 23px; background: var(--white); display: flex; flex-direction: column; overflow-y: auto; }
 .coach-topline { justify-content: space-between; }
 .coach-topline > span { font-size: 11px; font-weight: 700; }
 .coach-kicker { margin: 42px 0 9px; font-size: 9px; text-transform: uppercase; letter-spacing: .09em; color: var(--brand-blue); font-weight: 720; }
@@ -207,8 +207,20 @@ footer p { margin: 0; font-weight: 650; }
 footer > span { color: var(--muted); }
 
 @media (max-width: 1180px) {
-  .workspace { grid-template-columns: 220px minmax(480px, 1fr); }
-  .canvas-body { grid-template-columns: minmax(360px, 1fr) 330px; }
+  /* Tablet: the mission rail no longer fits as a third column, so it collapses to
+     a full-width, swipeable stepper across the top. The mission guide + canvas
+     share the row beneath it. */
+  .workspace { grid-template-columns: 320px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .mission-rail { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 14px; border-right: 0; border-bottom: 1px solid var(--line); padding: 12px 16px; }
+  .rail-heading { flex: 0 0 auto; flex-direction: column; align-items: flex-start; gap: 2px; padding: 0; }
+  .mission-rail ol { display: flex; flex: 1; min-width: 0; gap: 8px; margin: 0; overflow-x: auto; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+  .mission-rail li + li { margin-top: 0; }
+  .mission-link { width: auto; flex: 0 0 auto; grid-template-columns: auto auto; gap: 8px; padding: 8px 12px; white-space: nowrap; scroll-snap-align: start; border: 1px solid var(--line); background: var(--white); }
+  .mission-link.is-active { border-color: var(--ink); }
+  .mission-link small, .mission-link em { display: none; }
+  .mission-link strong { overflow: visible; text-overflow: clip; }
+  .rail-note { display: none; }
+
   .coach-card { padding: 22px 18px; }
   .reference-shot { max-width: 100%; }
   .reference-shot--branch { max-width: 360px; }
@@ -217,11 +229,6 @@ footer > span { color: var(--muted); }
 
 @media (max-width: 900px) {
   .intro { grid-template-columns: 1fr; gap: 28px; }
-  .workspace { grid-template-columns: 1fr; width: calc(100% - 24px); }
-  .mission-rail { border-right: 0; border-bottom: 1px solid var(--line); }
-  .mission-rail ol { display: grid; grid-template-columns: repeat(5, minmax(150px, 1fr)); overflow-x: auto; padding-bottom: 4px; }
-  .rail-note { display: none; }
-  .canvas-body { grid-template-columns: minmax(380px, 1fr) 340px; }
   .hero-card { grid-template-columns: 1fr; }
   .hero-art { min-height: 250px; }
   .labs-heading { grid-template-columns: 1fr; }
@@ -235,9 +242,11 @@ footer > span { color: var(--muted); }
   .brand-divider, .brand-section, .local-status { display: none; }
   .intro { padding-top: 38px; }
   .intro h1 { font-size: 48px; }
+  .workspace { grid-template-columns: 1fr; grid-template-rows: none; }
   .playground { padding: 12px; }
-  .canvas-body { grid-template-columns: 1fr; }
-  .coach-card { border-left: 0; border-top: 1px solid var(--line); }
+  .mission-rail { padding: 10px 12px; gap: 10px; }
+  .rail-heading { display: none; }
+  .coach-card { border-right: 0; border-bottom: 1px solid var(--line); }
   .hero-copy { padding: 28px 22px; }
   .art-frame { width: 270px; }
   .feature-grid, .labs-grid { grid-template-columns: 1fr; }

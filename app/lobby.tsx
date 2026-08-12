@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Badge, Button, Card } from "./components/ui";
+import { Badge, Button, Card, LabCard } from "./components/ui";
 
 type Mission = {
   id: string;
@@ -265,6 +265,36 @@ export function Lobby() {
           <div className="rail-note"><span aria-hidden="true">⌘</span><p><strong>No terminal required</strong><br />After cloning, every step happens in Make Local.</p></div>
         </nav>
 
+        <aside className="coach-card" id="mission-guide" aria-labelledby="active-mission-title">
+          <div className="coach-topline"><span>{String(MISSIONS.indexOf(active) + 1).padStart(2, "0")}</span><Badge text={active.duration} tone="neutral" /></div>
+          <p className="coach-kicker">{active.kicker}</p>
+          <h2 id="active-mission-title">{active.title}</h2>
+          <p className="coach-summary">{active.summary}</p>
+          <div className="control-location"><span>Find it</span><strong>{active.location}</strong></div>
+          <button className={`reference-shot reference-shot--${active.id}`} type="button" onClick={() => setExpandedShot(active)} aria-label={`Open larger product reference for ${active.title}`}>
+            {/* Native images preserve the exact pixels of these tiny product-reference crops. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={active.image} alt={active.imageAlt} />
+            <span><i /> Observed in Make Local <strong>Open larger ↗</strong></span>
+          </button>
+          <p className="look-for"><strong>What to look for</strong>{active.lookFor}</p>
+          <div className="checklist-heading"><span>Do this in Make Local</span><strong>{activeCheckedSteps.length}/{active.steps.length}</strong></div>
+          <ol className="mission-checklist">
+            {active.steps.map((step, index) => {
+              const isChecked = activeCheckedSteps.includes(index);
+              return (
+                <li key={step}>
+                  <button type="button" aria-pressed={isChecked} className={isChecked ? "is-checked" : ""} onClick={() => toggleStep(active.id, index)}>
+                    <span>{isChecked ? "✓" : index + 1}</span><span>{step}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="outcome"><span aria-hidden="true">◇</span><p><strong>What you’ll learn</strong>{active.outcome}</p></div>
+          <Button label={completed.includes(active.id) ? "Completed" : active.action} variant={completed.includes(active.id) ? "secondary" : "primary"} onClick={() => completeMission(active)} disabled={completed.includes(active.id)} />
+        </aside>
+
         <section className="canvas" aria-label="Editable playground">
           <div className="canvas-toolbar">
             <div><span className="canvas-dot canvas-dot--red" /><span className="canvas-dot canvas-dot--yellow" /><span className="canvas-dot canvas-dot--green" /></div>
@@ -273,36 +303,6 @@ export function Lobby() {
           </div>
 
           <div className="canvas-body">
-            <aside className="coach-card" id="mission-guide" aria-labelledby="active-mission-title">
-              <div className="coach-topline"><span>{String(MISSIONS.indexOf(active) + 1).padStart(2, "0")}</span><Badge text={active.duration} tone="neutral" /></div>
-              <p className="coach-kicker">{active.kicker}</p>
-              <h2 id="active-mission-title">{active.title}</h2>
-              <p className="coach-summary">{active.summary}</p>
-              <div className="control-location"><span>Find it</span><strong>{active.location}</strong></div>
-              <button className={`reference-shot reference-shot--${active.id}`} type="button" onClick={() => setExpandedShot(active)} aria-label={`Open larger product reference for ${active.title}`}>
-                {/* Native images preserve the exact pixels of these tiny product-reference crops. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={active.image} alt={active.imageAlt} />
-                <span><i /> Observed in Make Local <strong>Open larger ↗</strong></span>
-              </button>
-              <p className="look-for"><strong>What to look for</strong>{active.lookFor}</p>
-              <div className="checklist-heading"><span>Do this in Make Local</span><strong>{activeCheckedSteps.length}/{active.steps.length}</strong></div>
-              <ol className="mission-checklist">
-                {active.steps.map((step, index) => {
-                  const isChecked = activeCheckedSteps.includes(index);
-                  return (
-                    <li key={step}>
-                      <button type="button" aria-pressed={isChecked} className={isChecked ? "is-checked" : ""} onClick={() => toggleStep(active.id, index)}>
-                        <span>{isChecked ? "✓" : index + 1}</span><span>{step}</span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ol>
-              <div className="outcome"><span aria-hidden="true">◇</span><p><strong>What you’ll learn</strong>{active.outcome}</p></div>
-              <Button label={completed.includes(active.id) ? "Completed" : active.action} variant={completed.includes(active.id) ? "secondary" : "primary"} onClick={() => completeMission(active)} disabled={completed.includes(active.id)} />
-            </aside>
-
             <div className="playground">
             <section className="hero-card" data-tour-target="hero-card">
               <div className="hero-copy">
@@ -346,8 +346,8 @@ export function Lobby() {
       )}
 
       <section className="labs-section" aria-labelledby="labs-title">
-        <div className="labs-heading"><div><Badge text="Figma MCP + team workflows" tone="neutral" /><h2 id="labs-title">Keep going when curiosity wins.</h2></div><p>Paste a focused Design reference, watch it become local code, then grow into libraries and Code Connect. Smaller requests move faster; larger changes reward clear intent and patient review.</p></div>
-        <div className="labs-grid">{LABS.map((lab) => <article key={lab.number}><span>{lab.number}</span><h3>{lab.title}</h3><p>{lab.text}</p><span className="lab-arrow" aria-hidden="true">↗</span></article>)}</div>
+        <div className="labs-heading"><div><Badge text="Figma MCP + team workflows" tone="neutral" /><h2 id="labs-title">There's more to try! </h2></div><p>Paste a focused Design reference, watch it become local code, then grow into libraries and Code Connect. Smaller requests move faster; larger changes reward clear intent and patient review.</p></div>
+        <div className="labs-grid">{LABS.map((lab) => <LabCard key={lab.number} number={lab.number} title={lab.title}>{lab.text}</LabCard>)}</div>
       </section>
 
       <footer><FigmaMark /><p>Make Local Lobby · A safe place to learn by making.</p><span>Everything stays on your machine until you choose to share it.</span></footer>

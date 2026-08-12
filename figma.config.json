@@ -5,9 +5,10 @@
     "language": "jsx",
     "defaultBranch": "main",
     "documentUrlSubstitutions": {
-      "<FIGMA_LOBBY_BUTTON>": "https://www.figma.com/design/J0KLPKXiONDRssXD1AX9Oi?node-id=4185-3778",
-      "<FIGMA_LOBBY_CARD>": "https://www.figma.com/design/J0KLPKXiONDRssXD1AX9Oi?node-id=2142-11380",
-      "<FIGMA_LOBBY_BADGE>": "https://www.figma.com/design/J0KLPKXiONDRssXD1AX9Oi?node-id=56-8830"
+      "<FIGMA_LOBBY_BUTTON>": "https://staging.figma.com/design/EsvH4neZ4iIJMQRJxOVRE4?node-id=2-38",
+      "<FIGMA_LOBBY_CARD>": "https://staging.figma.com/design/EsvH4neZ4iIJMQRJxOVRE4?node-id=5-16",
+      "<FIGMA_LOBBY_BADGE>": "https://staging.figma.com/design/EsvH4neZ4iIJMQRJxOVRE4?node-id=3-8",
+      "<FIGMA_LOBBY_LABCARD>": "https://staging.figma.com/design/EsvH4neZ4iIJMQRJxOVRE4?node-id=7-2"
     }
   }
 }

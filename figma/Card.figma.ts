@@ -5,13 +5,15 @@
 import figma from "figma";
 
 const instance = figma.selectedInstance;
-const title = instance.getString("Heading");
+const eyebrow = instance.getString("Eyebrow");
+const title = instance.getString("Title");
 const body = instance.getString("Body");
-const emphasis = instance.getEnum("Variant", { Stroke: "brand", Default: "default" });
+const icon = instance.getString("Icon");
+const emphasis = instance.getEnum("Emphasis", { Default: "default", Brand: "brand" });
 
 export default {
   id: "make-local-lobby-card",
   imports: ['import { Card } from "./components/ui";'],
-  example: figma.code`<Card eyebrow="From Figma" title={${title}} emphasis={${emphasis}} icon="◇">${body}</Card>`,
+  example: figma.code`<Card eyebrow={${eyebrow}} title={${title}} emphasis={${emphasis}} icon={${icon}}>${body}</Card>`,
   metadata: { nestable: true },
 };

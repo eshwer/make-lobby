@@ -60,3 +60,22 @@ export function Card({
     </article>
   );
 }
+
+export function LabCard({
+  number,
+  title,
+  children,
+}: {
+  number: string;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <article>
+      <span>{number}</span>
+      <h3>{title}</h3>
+      <p>{children}</p>
+      <span className="lab-arrow" aria-hidden="true">↗</span>
+    </article>
+  );
+}
