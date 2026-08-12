@@ -304,6 +304,7 @@ export function Lobby() {
 
           <div className="canvas-body">
             <div className="playground">
+            <p className="playground-intro">This is your playground — a mini browser where you can test and edit things right on the page to complete what your mission asks of you.</p>
             <section className="hero-card" data-tour-target="hero-card">
               <div className="hero-copy">
                 <Badge text="Local-first design" tone="neutral" />
