@@ -3,113 +3,203 @@
 import { useEffect, useMemo, useState } from "react";
 import { Badge, Button, Card, LabCard } from "./components/ui";
 
-type Mission = {
+type WalkthroughTarget =
+  | "center"
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "left"
+  | "right"
+  | "cta"
+  | "card";
+
+type WalkthroughStep = {
   id: string;
+  mission: number;
   kicker: string;
   title: string;
-  duration: string;
-  summary: string;
-  location: string;
-  image: string;
-  imageAlt: string;
-  lookFor: string;
-  steps: string[];
-  outcome: string;
-  action: string;
+  body: string;
+  instruction: string;
+  target: WalkthroughTarget;
+  targetLabel?: string;
+  image?: string;
+  imageAlt?: string;
+  nextLabel: string;
   validator?: "large-button";
 };
 
-const MISSIONS: Mission[] = [
+const WALKTHROUGH_STEPS: WalkthroughStep[] = [
   {
-    id: "branch",
-    kicker: "Git foundations",
-    title: "Make a safe branch",
-    duration: "1 min",
-    summary: "Keep main stable while you experiment in your own workspace.",
-    location: "Bottom bar → main → Create branch…",
-    image: "/tour/branch-picker.webp",
-    imageAlt: "Make Local branch picker showing main and the Create branch action.",
-    lookFor: "The current branch sits below the prompt box—not in the top toolbar.",
-    steps: [
-      "At the bottom of the agent panel, click the current branch name: main.",
-      "Choose Create branch… in the dark branch menu.",
-      "Name it workshop/<your-name>, then choose Create and check out.",
-    ],
-    outcome: "You are now working on an isolated branch. Make Local can save agent edits as versioned commits here.",
-    action: "I’m on my branch",
+    id: "welcome",
+    mission: 0,
+    kicker: "Interactive product tour",
+    title: "Learn Make Local in the real interface",
+    body: "Keep this page open in the preview. Each step points to the actual Make Local control around it, then waits while you try the action yourself.",
+    instruction: "The tour never clicks product controls for you. Follow the arrow, perform the action, then return here to continue.",
+    target: "center",
+    nextLabel: "Start the walkthrough",
   },
   {
-    id: "edit",
-    kicker: "Point and edit",
-    title: "Make the CTA bigger",
-    duration: "2 min",
-    summary: "Select the real rendered button and change its source-backed properties.",
-    location: "Preview toolbar → Edit → select the blue CTA",
+    id: "branch-picker",
+    mission: 1,
+    kicker: "Git foundations · 1 of 2",
+    title: "Open the branch picker",
+    body: "Look below the chat composer in Make Local’s left panel. The current branch name lives in that bottom bar.",
+    instruction: "Click main to open the branch menu.",
+    target: "bottom-left",
+    targetLabel: "Branch control below the chat box",
+    image: "/tour/branch-picker.webp",
+    imageAlt: "Make Local branch picker showing main and Create branch.",
+    nextLabel: "The branch menu is open",
+  },
+  {
+    id: "create-branch",
+    mission: 1,
+    kicker: "Git foundations · 2 of 2",
+    title: "Create your safe workspace",
+    body: "Choose Create branch… and start from main. A personal branch keeps the shared starting point stable.",
+    instruction: "Name it workshop/<your-name>, then choose Create and check out.",
+    target: "bottom-left",
+    targetLabel: "Create branch…",
+    image: "/tour/branch-picker.webp",
+    imageAlt: "Make Local branch menu with Create branch highlighted at the bottom.",
+    nextLabel: "I’m on my branch",
+  },
+  {
+    id: "edit-mode",
+    mission: 2,
+    kicker: "Point & Edit · 1 of 3",
+    title: "Turn on Edit",
+    body: "The preview toolbar sits immediately above this page. Edit is the cursor-with-spark control near its right edge.",
+    instruction: "Click Edit. The page becomes selectable and a properties panel opens when you choose an element.",
+    target: "top-right",
+    targetLabel: "Edit in the preview toolbar",
     image: "/tour/design-mode.webp",
-    imageAlt: "Make Local Design mode with a rendered heading selected and the properties panel open on the right.",
-    lookFor: "A blue outline appears on the page and the right panel changes from Page styles to the selected element.",
-    steps: [
-      "In the preview toolbar, choose Edit—the cursor-with-spark icon.",
-      "Click the blue Start designing button. Confirm its blue outline and right-hand panel.",
-      "Under Properties, change Size from Medium to Large, then apply the pending edit.",
-    ],
-    outcome: "The visual change becomes a focused code edit, and the preview hot-reloads in place.",
-    action: "Check my button",
+    imageAlt: "Make Local Design mode with its right-hand properties panel open.",
+    nextLabel: "Edit is on",
+  },
+  {
+    id: "select-cta",
+    mission: 2,
+    kicker: "Point & Edit · 2 of 3",
+    title: "Select the real CTA",
+    body: "Point & Edit works on the rendered interface, not a separate mock. The highlighted button below is backed by the Button component in this repository.",
+    instruction: "Click Start designing and look for a blue selection outline plus component properties on the right.",
+    target: "cta",
+    nextLabel: "The button is selected",
+  },
+  {
+    id: "change-size",
+    mission: 2,
+    kicker: "Point & Edit · 3 of 3",
+    title: "Change a code property",
+    body: "The selected Button exposes design-facing props from the repository’s code-property definition.",
+    instruction: "In the right panel, change Size from Medium to Large and apply the pending edit. This step checks the rendered result.",
+    target: "right",
+    targetLabel: "Properties panel",
+    image: "/tour/design-mode.webp",
+    imageAlt: "Make Local properties panel beside a selected rendered element.",
+    nextLabel: "Check the button",
     validator: "large-button",
   },
   {
-    id: "review",
-    kicker: "Review and recover",
-    title: "Inspect and restore",
-    duration: "3 min",
-    summary: "Inspect the code diff, preview a checkpoint, and recover without deleting history.",
-    location: "Top bar → Commits → hover a version → •••",
+    id: "open-commits",
+    mission: 3,
+    kicker: "Review & recover · 1 of 2",
+    title: "Open commit history",
+    body: "Agent edits become named checkpoints. The Commits control is above the chat panel, to the left of this preview.",
+    instruction: "Click Commits, then hover the newest version to reveal its ••• menu.",
+    target: "top-left",
+    targetLabel: "Commits above the chat panel",
     image: "/tour/commit-actions.webp",
-    imageAlt: "Make Local commit history with Preview commit, View changes, and Restore commit actions open.",
-    lookFor: "The action menu only appears after you hover a commit row and choose its three dots.",
-    steps: [
-      "Open Commits in the top bar and hover the latest version.",
-      "Choose •••, then View changes to inspect the code diff.",
-      "On an earlier version, choose ••• → Preview commit, then Restore commit. Confirm a new latest version appears.",
-    ],
-    outcome: "Restore creates a new commit with the older snapshot, so the branch keeps a legible record of every checkpoint.",
-    action: "I reviewed and restored",
+    imageAlt: "Make Local commit history with its action menu open.",
+    nextLabel: "Commit history is open",
   },
   {
-    id: "annotate",
-    kicker: "Direct the agent",
-    title: "Annotate with context",
-    duration: "2 min",
-    summary: "Pin a request to the exact rendered element and name the component the agent should use.",
-    location: "Preview toolbar → Annotate for agent → select a card",
+    id: "review-restore",
+    mission: 3,
+    kicker: "Review & recover · 2 of 2",
+    title: "Review, preview, and restore",
+    body: "One menu contains the complete recovery loop: inspect the diff, preview an earlier running state, or restore its tree.",
+    instruction: "Choose View changes. Then preview an earlier commit and Restore commit. Restore adds a new checkpoint; it does not erase intervening history.",
+    target: "top-left",
+    targetLabel: "••• on a commit row",
+    image: "/tour/commit-actions.webp",
+    imageAlt: "Commit menu showing Preview commit, View changes, and Restore commit.",
+    nextLabel: "I reviewed the history",
+  },
+  {
+    id: "annotate-mode",
+    mission: 4,
+    kicker: "Annotate · 1 of 3",
+    title: "Turn on Annotate for agent",
+    body: "Annotate lives beside Edit in the preview toolbar. It lets you pin intent to a rendered element without directly changing its properties.",
+    instruction: "Click Annotate for agent—the note icon near the toolbar’s right edge.",
+    target: "top-right",
+    targetLabel: "Annotate for agent",
     image: "/tour/annotate-for-agent.webp",
-    imageAlt: "Make Local annotation mode showing a selected heading, numbered pin, and Ask for changes composer.",
-    lookFor: "The element gets a blue outline and numbered pin, with an Ask for changes composer anchored beside it.",
-    steps: [
-      "Choose Annotate for agent—the note icon beside Edit in the preview toolbar.",
-      "Click the orange Edit with design controls card to place a numbered annotation pin.",
-      "Type “Use @Card with brand emphasis,” choose Card under Components, submit the note, then Apply it in chat.",
-    ],
-    outcome: "The pin carries element context, while the @Card mention tells the agent which reusable code component should satisfy the request.",
-    action: "I applied the annotation",
+    imageAlt: "Make Local annotation mode with a numbered pin and note composer.",
+    nextLabel: "Annotation mode is on",
   },
   {
-    id: "roundtrip",
-    kicker: "Code to canvas",
-    title: "Send it to Design",
-    duration: "2 min",
-    summary: "Turn the running page into editable Figma layers without rebuilding it by hand.",
-    location: "Preview toolbar → Copy designs → Ready to send",
+    id: "pin-card",
+    mission: 4,
+    kicker: "Annotate · 2 of 3",
+    title: "Pin the element you mean",
+    body: "A visual pin carries the selected element and its source context into the request.",
+    instruction: "Click the highlighted orange card. A numbered pin and Ask for changes composer should appear beside it.",
+    target: "card",
+    nextLabel: "The card is pinned",
+  },
+  {
+    id: "mention-card",
+    mission: 4,
+    kicker: "Annotate · 3 of 3",
+    title: "Name the component to use",
+    body: "An @-mention removes ambiguity by attaching a real component or token candidate to the note.",
+    instruction: "Type “Use @Card with brand emphasis,” choose Card under Components, submit the note, then click Apply in the chat panel.",
+    target: "left",
+    targetLabel: "Apply the staged request in chat",
+    image: "/tour/annotate-for-agent.webp",
+    imageAlt: "Annotation composer attached to a selected element in Make Local.",
+    nextLabel: "The annotation is applied",
+  },
+  {
+    id: "copy-designs",
+    mission: 5,
+    kicker: "Code to canvas · 1 of 2",
+    title: "Open Copy designs",
+    body: "Copy designs captures the rendered page as editable Figma layers and can replace mapped output with Code Connect instances.",
+    instruction: "Click the outlined-layers Copy designs control in the preview toolbar.",
+    target: "top-right",
+    targetLabel: "Copy designs in the toolbar",
     image: "/tour/copy-designs.webp",
-    imageAlt: "Make Local Ready to send toolbar with Copy to clipboard, a recent file, and New file options.",
-    lookFor: "Copy designs opens a dark Ready to send toolbar at the bottom of the preview.",
-    steps: [
-      "Choose Copy designs—the outlined-layers icon in the preview toolbar.",
-      "Choose Copy to clipboard, or open its arrow to send to a recent Design file or New file.",
-      "Edit the attached frame in Figma Desktop; after a change, choose Update Make in its toolbelt.",
-    ],
-    outcome: "Code Connect can replace matching DOM output with real library instances and carry supported props across the handoff.",
-    action: "My update is back",
+    imageAlt: "Make Local Copy designs toolbar showing Ready to send.",
+    nextLabel: "Ready to send is visible",
+  },
+  {
+    id: "send-design",
+    mission: 5,
+    kicker: "Code to canvas · 2 of 2",
+    title: "Send the page to Design",
+    body: "A dark Ready to send bar appears along the bottom of the preview after capture finishes.",
+    instruction: "Choose Copy to clipboard, or open the arrow for a recent Design file or New file. In Desktop, edited attached frames can return through Update Make.",
+    target: "bottom-center",
+    targetLabel: "Ready to send",
+    image: "/tour/copy-designs.webp",
+    imageAlt: "Ready to send bar with Copy to clipboard and Design file destinations.",
+    nextLabel: "Finish the walkthrough",
+  },
+  {
+    id: "complete",
+    mission: 6,
+    kicker: "Walkthrough complete",
+    title: "You used the full Make Local loop",
+    body: "You created a safe branch, edited real code visually, reviewed and restored history, directed the agent with context, and carried the result into Figma Design.",
+    instruction: "Keep experimenting below, or restart the walkthrough whenever you want to teach the flow again.",
+    target: "center",
+    nextLabel: "Explore the optional labs",
   },
 ];
 
@@ -122,7 +212,16 @@ const LABS = [
   { number: "06", title: "Share for review", text: "Fork the repo, push your workshop branch, and open a pull request from Make Local." },
 ];
 
-const STORAGE_KEY = "make-local-lobby-progress-v1";
+const WALKTHROUGH_STORAGE_KEY = "make-local-lobby-traditional-walkthrough-v1";
+
+const TARGET_ARROWS: Partial<Record<WalkthroughTarget, string>> = {
+  "top-left": "↖",
+  "top-right": "↗",
+  "bottom-left": "↙",
+  "bottom-center": "↓",
+  left: "←",
+  right: "→",
+};
 
 function FigmaMark() {
   return (
@@ -134,25 +233,26 @@ function FigmaMark() {
 }
 
 export function Lobby() {
-  const [activeId, setActiveId] = useState(MISSIONS[0].id);
-  const [completed, setCompleted] = useState<string[]>([]);
-  const [checkedSteps, setCheckedSteps] = useState<Record<string, number[]>>({});
-  const [expandedShot, setExpandedShot] = useState<Mission | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [walkthroughActive, setWalkthroughActive] = useState(true);
+  const [validationMessage, setValidationMessage] = useState("");
   const [ready, setReady] = useState(false);
-  const [notice, setNotice] = useState("Start with the branch control below the agent panel.");
+  const [spotlightRect, setSpotlightRect] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
 
   useEffect(() => {
     const hydrate = window.setTimeout(() => {
       try {
-        const stored = window.localStorage.getItem(STORAGE_KEY);
+        const stored = window.localStorage.getItem(WALKTHROUGH_STORAGE_KEY);
         if (stored) {
           const progress = JSON.parse(stored);
-          const validMissionIds = new Set(MISSIONS.map((mission) => mission.id));
-          setCompleted((progress.completed ?? []).filter((id: string) => validMissionIds.has(id)));
-          setCheckedSteps(progress.checkedSteps ?? {});
+          const index = Number(progress.activeIndex);
+          if (Number.isInteger(index) && index >= 0 && index < WALKTHROUGH_STEPS.length) {
+            setActiveIndex(index);
+          }
+          if (typeof progress.active === "boolean") setWalkthroughActive(progress.active);
         }
       } catch {
-        // Progress is helpful, never required.
+        // The walkthrough still works when browser storage is unavailable.
       }
       setReady(true);
     }, 0);
@@ -161,59 +261,89 @@ export function Lobby() {
 
   useEffect(() => {
     if (!ready) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, completed, checkedSteps }));
-  }, [checkedSteps, completed, ready]);
+    window.localStorage.setItem(
+      WALKTHROUGH_STORAGE_KEY,
+      JSON.stringify({ version: 1, activeIndex, active: walkthroughActive }),
+    );
+  }, [activeIndex, ready, walkthroughActive]);
 
   useEffect(() => {
-    if (!expandedShot) return;
-    function closeOnEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") setExpandedShot(null);
+    function handleKeyDown(event: KeyboardEvent) {
+      if (!walkthroughActive) return;
+      if (event.key === "Escape") setWalkthroughActive(false);
+      if (event.key === "ArrowLeft" && activeIndex > 0) {
+        setValidationMessage("");
+        setActiveIndex((index) => index - 1);
+      }
     }
-    window.addEventListener("keydown", closeOnEscape);
-    return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [expandedShot]);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeIndex, walkthroughActive]);
 
-  const active = useMemo(() => MISSIONS.find((mission) => mission.id === activeId) ?? MISSIONS[0], [activeId]);
-  const progress = Math.round((completed.length / MISSIONS.length) * 100);
-  const activeCheckedSteps = checkedSteps[active.id] ?? [];
+  useEffect(() => {
+    const target = WALKTHROUGH_STEPS[activeIndex]?.target;
+    const selector = target === "cta"
+      ? "[data-tour-target='hero-cta']"
+      : target === "card"
+        ? "[data-tour-target='editable-card']"
+        : null;
 
-  function toggleStep(missionId: string, stepIndex: number) {
-    setCheckedSteps((current) => {
-      const missionSteps = current[missionId] ?? [];
-      const next = missionSteps.includes(stepIndex)
-        ? missionSteps.filter((index) => index !== stepIndex)
-        : [...missionSteps, stepIndex];
-      return { ...current, [missionId]: next };
-    });
+    if (!walkthroughActive || !selector) return;
+
+    function measureTarget() {
+      const element = document.querySelector<HTMLElement>(selector);
+      if (!element) return setSpotlightRect(null);
+      const rect = element.getBoundingClientRect();
+      setSpotlightRect({ top: rect.top, left: rect.left, width: rect.width, height: rect.height });
+    }
+
+    const animationFrame = window.requestAnimationFrame(measureTarget);
+    window.addEventListener("resize", measureTarget);
+    window.addEventListener("scroll", measureTarget, true);
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("resize", measureTarget);
+      window.removeEventListener("scroll", measureTarget, true);
+    };
+  }, [activeIndex, walkthroughActive]);
+
+  const activeStep = WALKTHROUGH_STEPS[activeIndex];
+  const actionableStepCount = WALKTHROUGH_STEPS.length - 2;
+  const currentActionNumber = Math.min(Math.max(activeIndex, 0), actionableStepCount);
+  const completedMissionCount = Math.min(Math.max(activeStep.mission - 1, 0), 5);
+  const progress = Math.round((currentActionNumber / actionableStepCount) * 100);
+  const isInPageTarget = activeStep.target === "cta" || activeStep.target === "card";
+  const targetArrow = TARGET_ARROWS[activeStep.target];
+
+  const missionDots = useMemo(() => [1, 2, 3, 4, 5], []);
+
+  function restartWalkthrough() {
+    setValidationMessage("");
+    setActiveIndex(0);
+    setWalkthroughActive(true);
   }
 
-  function completeMission(mission: Mission) {
-    const missionSteps = checkedSteps[mission.id] ?? [];
-    if (missionSteps.length < mission.steps.length) {
-      setNotice(`Check off all ${mission.steps.length} steps in “${mission.title}” first.`);
-      return;
-    }
-
-    if (mission.validator === "large-button") {
+  function advanceWalkthrough() {
+    if (activeStep.validator === "large-button") {
       const target = document.querySelector<HTMLElement>("[data-tour-target='hero-cta']");
       if (target?.dataset.size !== "large") {
-        setNotice("Not quite yet — select the blue CTA in Design mode and set Size to Large.");
+        setValidationMessage("The CTA is still Medium. Use the right-hand Properties panel to set Size to Large, then apply the edit.");
         return;
       }
     }
 
-    setCompleted((current) => current.includes(mission.id) ? current : [...current, mission.id]);
-    const index = MISSIONS.findIndex((item) => item.id === mission.id);
-    const next = MISSIONS[index + 1];
-    setNotice(next ? `Nice. Next up: ${next.title}.` : "Tour complete — you made the full local-to-Design loop.");
-    if (next) setActiveId(next.id);
+    setValidationMessage("");
+    if (activeIndex === WALKTHROUGH_STEPS.length - 1) {
+      setWalkthroughActive(false);
+      window.requestAnimationFrame(() => document.getElementById("labs")?.scrollIntoView({ behavior: "smooth" }));
+      return;
+    }
+    setActiveIndex((index) => Math.min(index + 1, WALKTHROUGH_STEPS.length - 1));
   }
 
-  function resetTour() {
-    setCompleted([]);
-    setCheckedSteps({});
-    setActiveId(MISSIONS[0].id);
-    setNotice("Tour progress reset. Your Git history and code are unchanged.");
+  function goBack() {
+    setValidationMessage("");
+    setActiveIndex((index) => Math.max(index - 1, 0));
   }
 
   return (
@@ -223,134 +353,129 @@ export function Lobby() {
           <FigmaMark />
           <span className="brand-name">Make Local</span>
           <span className="brand-divider" />
-          <span className="brand-section">Lobby</span>
+          <span className="brand-section">Guided lobby</span>
         </a>
         <div className="topbar-actions">
           <span className="local-status"><i /> Running locally</span>
-          <button className="text-button" type="button" onClick={resetTour}>Reset tour</button>
+          <button className="text-button" type="button" onClick={restartWalkthrough}>Restart walkthrough</button>
         </div>
       </header>
 
-      <section className="intro" id="top">
+      <section className="guided-intro" id="top">
         <div>
-          <Badge text="5–10 minute quick tour" tone="brand" />
-          <h1>Design on code</h1>
-          <p>Take a tour to understand the features available in Make. </p>
+          <Badge text="Traditional product walkthrough" tone="brand" />
+          <h1>Learn by clicking the real thing.</h1>
+          <p>Follow one instruction at a time. Edge arrows point to Make Local controls surrounding this preview; spotlights identify editable elements inside the page.</p>
         </div>
-        <div className="intro-progress" aria-label={`${progress}% of tour complete`}>
-          <div className="progress-copy"><span>Your progress</span><strong>{completed.length}/{MISSIONS.length}</strong></div>
-          <div className="progress-track"><span style={{ width: `${progress}%` }} /></div>
-          <p aria-live="polite">{notice}</p>
+        <div className="guided-progress" aria-label={`${progress}% of walkthrough complete`}>
+          <span>{currentActionNumber}/{actionableStepCount} actions</span>
+          <div><i style={{ width: `${progress}%` }} /></div>
+          <strong>{activeStep.mission > 0 && activeStep.mission <= 5 ? `Mission ${activeStep.mission} of 5` : activeStep.kicker}</strong>
         </div>
       </section>
 
-      <div className="workspace">
-        <nav className="mission-rail" aria-label="Quick tour missions">
-          <div className="rail-heading"><span>Quick tour</span><small>about 10 min</small></div>
-          <ol>
-            {MISSIONS.map((mission, index) => {
-              const isDone = completed.includes(mission.id);
-              const isActive = mission.id === active.id;
-              return (
-                <li key={mission.id}>
-                  <button className={isActive ? "mission-link is-active" : "mission-link"} onClick={() => setActiveId(mission.id)} type="button">
-                    <span className={isDone ? "mission-number is-done" : "mission-number"}>{isDone ? "✓" : index + 1}</span>
-                    <span><small>{mission.kicker}</small><strong>{mission.title}</strong></span>
-                    <em>{mission.duration}</em>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-          <div className="rail-note"><span aria-hidden="true">⌘</span><p><strong>No terminal required</strong><br />After cloning, every step happens in Make Local.</p></div>
-        </nav>
+      <section className="guided-workspace" aria-label="Editable playground">
+        <div className="canvas-toolbar">
+          <div><span className="canvas-dot canvas-dot--red" /><span className="canvas-dot canvas-dot--yellow" /><span className="canvas-dot canvas-dot--green" /></div>
+          <span>localhost · editable playground</span>
+          <Badge text="Live" tone="success" />
+        </div>
 
-        <aside className="coach-card" id="mission-guide" aria-labelledby="active-mission-title">
-          <div className="coach-topline"><span>{String(MISSIONS.indexOf(active) + 1).padStart(2, "0")}</span><Badge text={active.duration} tone="neutral" /></div>
-          <p className="coach-kicker">{active.kicker}</p>
-          <h2 id="active-mission-title">{active.title}</h2>
-          <p className="coach-summary">{active.summary}</p>
-          <div className="control-location"><span>Find it</span><strong>{active.location}</strong></div>
-          <button className={`reference-shot reference-shot--${active.id}`} type="button" onClick={() => setExpandedShot(active)} aria-label={`Open larger product reference for ${active.title}`}>
-            {/* Native images preserve the exact pixels of these tiny product-reference crops. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={active.image} alt={active.imageAlt} />
-            <span><i /> Observed in Make Local <strong>Open larger ↗</strong></span>
-          </button>
-          <p className="look-for"><strong>What to look for</strong>{active.lookFor}</p>
-          <div className="checklist-heading"><span>Do this in Make Local</span><strong>{activeCheckedSteps.length}/{active.steps.length}</strong></div>
-          <ol className="mission-checklist">
-            {active.steps.map((step, index) => {
-              const isChecked = activeCheckedSteps.includes(index);
-              return (
-                <li key={step}>
-                  <button type="button" aria-pressed={isChecked} className={isChecked ? "is-checked" : ""} onClick={() => toggleStep(active.id, index)}>
-                    <span>{isChecked ? "✓" : index + 1}</span><span>{step}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-          <div className="outcome"><span aria-hidden="true">◇</span><p><strong>What you’ll learn</strong>{active.outcome}</p></div>
-          <Button label={completed.includes(active.id) ? "Completed" : active.action} variant={completed.includes(active.id) ? "secondary" : "primary"} onClick={() => completeMission(active)} disabled={completed.includes(active.id) || activeCheckedSteps.length < active.steps.length} />
-        </aside>
-
-        <section className="canvas" aria-label="Editable playground">
-          <div className="canvas-toolbar">
-            <div><span className="canvas-dot canvas-dot--red" /><span className="canvas-dot canvas-dot--yellow" /><span className="canvas-dot canvas-dot--green" /></div>
-            <span>localhost · editable playground</span>
-            <Badge text="Live" tone="success" />
-          </div>
-
-          <div className="canvas-body">
-            <div className="playground">
-            <section className="hero-card" data-tour-target="hero-card">
-              <div className="hero-copy">
-                <Badge text="Local-first design" tone="neutral" />
-                <h2>From intent to interface,<br /><span>without the handoff gap.</span></h2>
-                <p>Explore freely in a safe branch. Every meaningful change becomes reviewable code, ready for your team.</p>
-                <div className="hero-actions">
-                  <Button label="Start designing" size="medium" data-tour-target="hero-cta" />
-                  <span className="hero-hint">← Your first edit target</span>
-                </div>
+        <div className="guided-playground">
+          <section className="hero-card" data-tour-target="hero-card">
+            <div className="hero-copy">
+              <Badge text="Local-first design" tone="neutral" />
+              <h2>From intent to interface,<br /><span>without the handoff gap.</span></h2>
+              <p>Explore freely in a safe branch. Every meaningful change becomes reviewable code, ready for your team.</p>
+              <div className="hero-actions">
+                <Button
+                  label="Start designing"
+                  size="medium"
+                  className={walkthroughActive && activeStep.target === "cta" ? "tour-focus" : ""}
+                  data-tour-target="hero-cta"
+                />
+                <span className="hero-hint">← Your first edit target</span>
               </div>
-              <div className="hero-art" aria-hidden="true">
-                <div className="art-frame"><div className="art-toolbar" /><div className="art-sidebar" /><div className="art-object art-object--a" /><div className="art-object art-object--b" /></div>
-                <div className="cursor cursor--blue">M</div><div className="cursor cursor--pink">A</div>
+            </div>
+            <div className="hero-art" aria-hidden="true">
+              <div className="art-frame"><div className="art-toolbar" /><div className="art-sidebar" /><div className="art-object art-object--a" /><div className="art-object art-object--b" /></div>
+              <div className="cursor cursor--blue">M</div><div className="cursor cursor--pink">A</div>
+            </div>
+          </section>
+
+          <div className="feature-grid" data-tour-target="feature-grid">
+            <Card eyebrow="01 · Select" title="Point at what you mean" icon="⌖">Select rendered UI and trace it back to the source that produced it.</Card>
+            <div data-tour-target="editable-card" className={walkthroughActive && activeStep.target === "card" ? "tour-card-target tour-focus" : "tour-card-target"}>
+              <Card eyebrow="02 · Change" title="Edit with design controls" icon="◫" emphasis="brand">Adjust spacing, type, colors, and component props in the live page.</Card>
+            </div>
+            <Card eyebrow="03 · Review" title="Keep every move legible" icon="⌘">Inspect the diff, preview checkpoints, and restore without rewriting history.</Card>
+          </div>
+        </div>
+      </section>
+
+      {walkthroughActive && (
+        <div className={`walkthrough-layer walkthrough-layer--${activeStep.target} ${isInPageTarget ? "is-in-page" : ""}`} aria-live="polite">
+          {spotlightRect && isInPageTarget && (
+            <div
+              className="walkthrough-spotlight"
+              aria-hidden="true"
+              style={{
+                top: spotlightRect.top - 8,
+                left: spotlightRect.left - 8,
+                width: spotlightRect.width + 16,
+                height: spotlightRect.height + 16,
+              }}
+            />
+          )}
+          <div className="walkthrough-mission-dots" aria-label="Walkthrough missions">
+            {missionDots.map((mission) => (
+              <span key={mission} className={mission < activeStep.mission || mission <= completedMissionCount ? "is-complete" : mission === activeStep.mission ? "is-active" : ""}>{mission}</span>
+            ))}
+          </div>
+
+          {targetArrow && activeStep.targetLabel && (
+            <div className={`edge-pointer edge-pointer--${activeStep.target}`}>
+              <span className="edge-pointer__arrow" aria-hidden="true">{targetArrow}</span>
+              <strong>{activeStep.targetLabel}</strong>
+            </div>
+          )}
+
+          <section className={`walkthrough-card walkthrough-card--for-${activeStep.target}`} aria-labelledby="walkthrough-title">
+            <div className="walkthrough-card__topline">
+              <span>{activeStep.kicker}</span>
+              <button type="button" onClick={() => setWalkthroughActive(false)} aria-label="Exit walkthrough">Exit ×</button>
+            </div>
+            <h2 id="walkthrough-title">{activeStep.title}</h2>
+            <p>{activeStep.body}</p>
+            <div className="walkthrough-instruction"><span aria-hidden="true">→</span><strong>{activeStep.instruction}</strong></div>
+            {activeStep.image && (
+              <div className="walkthrough-reference">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={activeStep.image} alt={activeStep.imageAlt ?? "Make Local product reference"} />
+                <span>What you should see</span>
               </div>
-            </section>
-
-            <div className="feature-grid" data-tour-target="feature-grid">
-              <Card eyebrow="01 · Select" title="Point at what you mean" icon="⌖">Select any rendered element. Make Local traces it back to the component and source that produced it.</Card>
-              <Card eyebrow="02 · Change" title="Edit with design controls" icon="◫" emphasis="brand">Adjust spacing, type, colors, and component props while staying in the context of the live page.</Card>
-              <Card eyebrow="03 · Review" title="Keep every move legible" icon="⌘">Inspect the diff, preview any checkpoint, and restore without rewriting shared history.</Card>
+            )}
+            {validationMessage && <p className="walkthrough-error" role="alert">{validationMessage}</p>}
+            <div className="walkthrough-actions">
+              <button type="button" className="walkthrough-back" onClick={goBack} disabled={activeIndex === 0}>Back</button>
+              <button type="button" className="walkthrough-next" onClick={advanceWalkthrough}>{activeStep.nextLabel}<span aria-hidden="true">→</span></button>
             </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      {expandedShot && (
-        <div className="shot-modal" role="dialog" aria-modal="true" aria-labelledby="shot-modal-title">
-          <button className="shot-modal__backdrop" type="button" aria-label="Close product reference" onClick={() => setExpandedShot(null)} />
-          <div className={`shot-modal__card shot-modal__card--${expandedShot.id}`}>
-            <div className="shot-modal__header">
-              <div><span>Real Make Local reference</span><h2 id="shot-modal-title">{expandedShot.title}</h2></div>
-              <button type="button" onClick={() => setExpandedShot(null)} aria-label="Close product reference">Close ×</button>
-            </div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={expandedShot.image} alt={expandedShot.imageAlt} />
-            <p><strong>{expandedShot.location}</strong>{expandedShot.lookFor}</p>
-          </div>
+          </section>
         </div>
       )}
 
-      <section className="labs-section" aria-labelledby="labs-title">
-        <div className="labs-heading"><div><Badge text="Figma MCP + team workflows" tone="neutral" /><h2 id="labs-title">There's more to try! </h2></div><p>Paste a focused Design reference, watch it become local code, then grow into libraries and Code Connect. Smaller requests move faster; larger changes reward clear intent and patient review.</p></div>
+      {!walkthroughActive && (
+        <button className="resume-walkthrough" type="button" onClick={() => setWalkthroughActive(true)}>
+          <span aria-hidden="true">▶</span> Resume guided walkthrough
+        </button>
+      )}
+
+      <section className="labs-section" id="labs" aria-labelledby="labs-title">
+        <div className="labs-heading"><div><Badge text="Figma MCP + team workflows" tone="neutral" /><h2 id="labs-title">There&apos;s more to try!</h2></div><p>Paste a focused Design reference, watch it become local code, then grow into libraries and Code Connect. Smaller requests move faster; larger changes reward clear intent and patient review.</p></div>
         <div className="labs-grid">{LABS.map((lab) => <LabCard key={lab.number} number={lab.number} title={lab.title} showArrow={false}>{lab.text}</LabCard>)}</div>
       </section>
 
-      <footer><FigmaMark /><p>Make Local Lobby · A safe place to learn by making.</p><span>Everything stays on your machine until you choose to share it.</span></footer>
+      <footer><FigmaMark /><p>Make Local Lobby · Learn by making.</p><span>Everything stays on your machine until you choose to share it.</span></footer>
     </main>
   );
 }
