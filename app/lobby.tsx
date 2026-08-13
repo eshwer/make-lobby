@@ -368,11 +368,11 @@ export function Lobby() {
           </section>
 
           <div className="feature-grid" data-tour-target="feature-grid">
-            <Card eyebrow="01 · Select" title="Point at what you mean" icon="⌖">Select rendered UI and trace it back to the source that produced it.</Card>
+            <Card eyebrow="01 · Select" title="Point at what you mean" icon="⌖" subtext="Select rendered UI and trace it back to the source that produced it." showSubtext />
             <div data-tour-target="editable-card" className={walkthroughActive && activeStep.target === "card" ? "tour-card-target tour-focus" : "tour-card-target"}>
-              <Card eyebrow="02 · Change" title="Edit with design controls" icon="◫" emphasis="brand">Adjust spacing, type, colors, and component props in the live page.</Card>
+              <Card eyebrow="02 · Change" title="Edit with design controls" icon="◫" emphasis="brand" subtext="Adjust spacing, type, colors, and component props in the live page." showSubtext />
             </div>
-            <Card eyebrow="03 · Review" title="Keep every move legible" icon="⌘">Inspect the diff, preview checkpoints, and restore without rewriting history.</Card>
+            <Card eyebrow="03 · Review" title="Keep every move legible" icon="⌘" subtext="Inspect the diff, preview checkpoints, and restore without rewriting history." showSubtext />
           </div>
         </div>
       </section>

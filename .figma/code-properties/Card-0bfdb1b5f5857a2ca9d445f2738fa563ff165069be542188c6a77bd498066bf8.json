@@ -13,6 +13,15 @@
       "name": "Title",
       "type": "string"
     },
+    "subtext": {
+      "name": "Subtext",
+      "type": "string"
+    },
+    "showSubtext": {
+      "name": "Show subtext",
+      "type": "boolean",
+      "defaultValue": true
+    },
     "emphasis": {
       "name": "Emphasis",
       "type": "string",

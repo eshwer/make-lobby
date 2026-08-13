@@ -39,13 +39,15 @@ export function Badge({ text, tone = "neutral" }: { text: string; tone?: BadgeTo
 export function Card({
   eyebrow,
   title,
-  children,
+  subtext,
+  showSubtext = true,
   emphasis = "default",
   icon,
 }: {
   eyebrow: string;
   title: string;
-  children: ReactNode;
+  subtext: string;
+  showSubtext?: boolean;
   emphasis?: "default" | "brand";
   icon: string;
 }) {
@@ -56,7 +58,7 @@ export function Card({
         <span className="feature-card__eyebrow">{eyebrow}</span>
       </div>
       <h3>{title}</h3>
-      <p>{children}</p>
+      {showSubtext && <p>{subtext}</p>}
     </article>
   );
 }

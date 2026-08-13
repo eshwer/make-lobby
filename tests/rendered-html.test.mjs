@@ -21,6 +21,7 @@ test("server-renders the Make Local Lobby", async () => {
   assert.match(html, /The tour never clicks product controls for you/);
   assert.match(html, /Start the walkthrough/);
   assert.match(html, /Try editing me/);
+  assert.match(html, /Select rendered UI and trace it back to the source that produced it/);
   assert.doesNotMatch(html, /Running locally|localhost · editable playground/);
   assert.match(html, /Figma MCP \+ team workflows/);
   assert.match(html, /Scope with intent/);
@@ -77,6 +78,16 @@ test("defines current JSON code properties separately from Code Connect template
     assert.equal(json.source.componentName, component);
     await access(new URL(`../figma/${component}.figma.ts`, import.meta.url));
   }
+
+  const cardFilename = propertyFiles.find((name) => name.startsWith("Card-") && name.endsWith(".json"));
+  const cardProperties = JSON.parse(await readFile(new URL(cardFilename, propertyDirectory), "utf8"));
+  assert.equal(cardProperties.codeProperties.subtext.type, "string");
+  assert.equal(cardProperties.codeProperties.showSubtext.type, "boolean");
+  assert.equal(cardProperties.codeProperties.showSubtext.defaultValue, true);
+
+  const cardConnect = await readFile(new URL("../figma/Card.figma.ts", import.meta.url), "utf8");
+  assert.match(cardConnect, /getBoolean\("Show subtext"\)/);
+  assert.match(cardConnect, /showSubtext=/);
 });
 
 test("ships real-product visual references for the guided missions", async () => {

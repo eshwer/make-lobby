@@ -24,7 +24,7 @@ Each mission includes a cropped reference from the real Make Local interface, an
 ## What is configured
 
 - `.figma/make/` contains the complete Make Local bootstrap contract: `setup`, `install`, `dev`, `verify`, `env`, and source-classification settings in `dev.json`.
-- `.figma/code-properties/` defines editable properties for `Button`, `Card`, and `Badge` using Make Local's schema-v1 JSON format.
+- `.figma/code-properties/` defines editable properties for `Button`, `Card`, `Badge`, and `LabCard` using Make Local's schema-v1 JSON format. `Card` exposes both its subtext and a `Show subtext` toggle so learners can try the component with or without supporting copy.
 - `figma/*.figma.ts` contains current Code Connect template files for those components.
 - `figma.config.json` currently targets public Figma-owned Simple Design System components as development stand-ins. Before a production launch, replace the substitutions with stable node URLs from the dedicated Make Local Lobby library and publish the mappings under the canonical repository.
 
