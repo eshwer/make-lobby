@@ -27,8 +27,8 @@ test("defines nine atomic guided actions with hybrid completion", async () => {
   const source = await readFile(new URL("../app/lobby.tsx", import.meta.url), "utf8");
   const orderedSteps = [
     "Create a safe branch",
-    "Turn on Edit",
     "Make the button larger",
+    "Turn Edit off",
     "Inspect the change",
     "Restore the earlier version",
     "Pin the card you mean",
@@ -42,7 +42,8 @@ test("defines nine atomic guided actions with hybrid completion", async () => {
     assert.ok(index > previousIndex, `${title} should follow the previous action`);
     previousIndex = index;
   }
-  assert.equal((source.match(/completion: "manual"/g) ?? []).length, 6);
+  assert.equal((source.match(/completion: "manual"/g) ?? []).length, 5);
+  assert.match(source, /completion: "timed"/);
   assert.match(source, /completion: "button-large"/);
   assert.match(source, /completion: "button-medium"/);
   assert.match(source, /completion: "card-default"/);
@@ -78,4 +79,5 @@ test("ships real-product visual references for the guided missions", async () =>
   for (const image of ["branch-picker", "design-mode", "commit-actions", "annotate-for-agent", "copy-designs"]) {
     await access(new URL(`../public/tour/${image}.webp`, import.meta.url));
   }
+  await access(new URL("../public/tour/edit-control-zoom.png", import.meta.url));
 });

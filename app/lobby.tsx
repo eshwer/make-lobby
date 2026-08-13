@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge, Button, Card, LabCard } from "./components/ui";
 
-type TourTarget = "top-left" | "top-right" | "bottom-left" | "bottom-center" | "left" | "right";
-type TourVisual = "screenshot" | "button" | "card";
-type CompletionMode = "manual" | "button-large" | "button-medium" | "card-default";
+type TourTarget = "top-left" | "bottom-left" | "bottom-center" | "left" | "right" | "toolbar-edit" | "toolbar-annotate" | "toolbar-copy";
+type TourVisual = "screenshot" | "edit-task" | "button" | "card";
+type CompletionMode = "manual" | "timed" | "button-large" | "button-medium" | "card-default";
 type TourScreen = "welcome" | "active" | "paused" | "complete";
 
 type TourStep = {
@@ -38,28 +38,30 @@ const TOUR_STEPS: TourStep[] = [
     confirmLabel: "I’m on my branch",
   },
   {
-    id: "turn-on-edit",
-    mission: "Point & Edit",
-    title: "Turn on Edit",
-    instruction: "Click Edit in the preview toolbar. The page will become selectable.",
-    target: "top-right",
-    targetLabel: "Edit",
-    visual: "screenshot",
-    image: "/tour/design-mode.webp",
-    imageAlt: "Make Local Edit mode with the properties panel visible.",
-    completion: "manual",
-    confirmLabel: "Edit is on",
-  },
-  {
     id: "make-button-large",
     mission: "Point & Edit",
     title: "Make the button larger",
-    instruction: "Select the blue button below, then change Size from Medium to Large.",
-    target: "right",
-    targetLabel: "Properties panel",
-    visual: "button",
+    instruction: "Click the Edit control shown below. Then select the blue button and change Size from Medium to Large.",
+    target: "toolbar-edit",
+    targetLabel: "Edit",
+    visual: "edit-task",
+    image: "/tour/edit-control-zoom.png",
+    imageAlt: "Zoomed Make Local toolbar showing the Edit control selected.",
     completion: "button-large",
     detectionLabel: "Waiting for the rendered Button to become Large",
+  },
+  {
+    id: "turn-off-edit",
+    mission: "Point & Edit",
+    title: "Turn Edit off",
+    instruction: "Click the highlighted Edit control again so the preview returns to normal interaction.",
+    target: "toolbar-edit",
+    targetLabel: "Edit",
+    visual: "screenshot",
+    image: "/tour/edit-control-zoom.png",
+    imageAlt: "Zoomed Make Local toolbar showing the selected Edit control.",
+    completion: "timed",
+    detectionLabel: "The next step will open automatically — no page click needed",
   },
   {
     id: "inspect-change",
@@ -90,7 +92,7 @@ const TOUR_STEPS: TourStep[] = [
     mission: "Annotate",
     title: "Pin the card you mean",
     instruction: "Turn on Annotate, then click the orange Card below to attach your request.",
-    target: "top-right",
+    target: "toolbar-annotate",
     targetLabel: "Annotate",
     visual: "card",
     completion: "manual",
@@ -112,7 +114,7 @@ const TOUR_STEPS: TourStep[] = [
     mission: "Code to canvas",
     title: "Capture the page",
     instruction: "Click Copy designs in the preview toolbar and wait for Ready to send.",
-    target: "top-right",
+    target: "toolbar-copy",
     targetLabel: "Copy designs",
     visual: "screenshot",
     image: "/tour/copy-designs.webp",
@@ -148,11 +150,13 @@ const STORAGE_KEY = "make-local-lobby-guided-tour-v2";
 
 const TARGET_ARROWS: Record<TourTarget, string> = {
   "top-left": "↖",
-  "top-right": "↗",
   "bottom-left": "↙",
   "bottom-center": "↓",
   left: "←",
   right: "→",
+  "toolbar-edit": "↑",
+  "toolbar-annotate": "↑",
+  "toolbar-copy": "↑",
 };
 
 function FigmaMark() {
@@ -227,6 +231,14 @@ export function Lobby() {
 
     let advanceTimer: number | undefined;
     let hasDetected = false;
+
+    if (activeStep.completion === "timed") {
+      advanceTimer = window.setTimeout(() => {
+        setCompletedIds((current) => current.includes(activeStep.id) ? current : [...current, activeStep.id]);
+        setActiveIndex((index) => Math.min(index + 1, TOUR_STEPS.length - 1));
+      }, 4200);
+      return () => window.clearTimeout(advanceTimer);
+    }
 
     function checkForChange() {
       if (hasDetected || !isExpectedChange(activeStep)) return;
@@ -335,8 +347,17 @@ export function Lobby() {
                 <img src={activeStep.image} alt={activeStep.imageAlt ?? "Make Local product reference"} />
               )}
 
+              {activeStep.visual === "edit-task" && activeStep.image && (
+                <div className="edit-control-zoom">
+                  <span>1 · Click Edit in the toolbar</span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={activeStep.image} alt={activeStep.imageAlt ?? "Zoomed Edit control"} />
+                </div>
+              )}
+
               {showButtonTarget && (
-                <div className={activeStep.visual === "button" ? "live-target live-target--button is-visible" : "live-target live-target--button"}>
+                <div className={activeStep.visual === "button" || activeStep.visual === "edit-task" ? "live-target live-target--button is-visible" : "live-target live-target--button"}>
+                  {activeStep.visual === "edit-task" && <span className="live-target__label">2 · Select this in the preview</span>}
                   <Button label="Try editing me" size="medium" data-tour-target="hero-cta" />
                 </div>
               )}
