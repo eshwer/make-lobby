@@ -111,9 +111,9 @@ button { color: inherit; font: inherit; }
 .tour-next:hover { background: #353533; }
 .lobby-button:focus-visible, .tour-back:focus-visible, .tour-next:focus-visible, .tour-skip:focus-visible, .tour-card__topline button:focus-visible, summary:focus-visible { outline: 3px solid var(--brand-sky); outline-offset: 2px; }
 
-.edge-pointer { position: absolute; z-index: 4; max-width: 190px; display: flex; align-items: center; gap: 10px; color: var(--brand-blue-dark); pointer-events: none; filter: drop-shadow(0 2px 5px rgba(255,255,255,.8)); }
-.edge-pointer span { flex: 0 0 auto; font-size: 58px; font-weight: 300; line-height: .8; animation: pointer-pulse 1s ease-in-out infinite alternate; }
-.edge-pointer strong { padding: 5px 8px; border-radius: 7px; background: rgba(255,255,255,.92); font-size: 15px; line-height: 1.25; box-shadow: 0 4px 16px rgba(30,30,30,.1); }
+.edge-pointer { position: absolute; z-index: 4; max-width: 190px; display: flex; align-items: center; gap: 10px; color: #006edc; pointer-events: none; filter: drop-shadow(0 4px 9px rgba(0,0,0,.36)); }
+.edge-pointer span { flex: 0 0 auto; font-size: 58px; font-weight: 750; line-height: .8; -webkit-text-stroke: 2px var(--white); paint-order: stroke fill; animation: pointer-pulse 1s ease-in-out infinite alternate; }
+.edge-pointer strong { padding: 6px 9px; border: 2px solid var(--white); border-radius: 7px; background: var(--ink); color: var(--white); font-size: 15px; line-height: 1.25; box-shadow: 0 5px 18px rgba(0,0,0,.28); }
 .edge-pointer--top-left { top: 16px; left: 18px; align-items: flex-start; --pointer-x: -6px; }
 .edge-pointer--top-right { top: 16px; right: 18px; flex-direction: row-reverse; align-items: flex-start; text-align: right; --pointer-x: 6px; }
 .edge-pointer--bottom-left { bottom: 14px; left: 18px; align-items: flex-end; --pointer-x: -6px; }
