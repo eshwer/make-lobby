@@ -16,8 +16,8 @@ test("server-renders the Make Local Lobby", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /<title>Make Local Lobby<\/title>/i);
-  assert.match(html, /Learn Make Local one action at a time/);
-  assert.match(html, /Nine short tasks/);
+  assert.match(html, /Design directly on your local code/);
+  assert.match(html, /live, editable preview in Figma/);
   assert.match(html, /Start the quick tour/);
   assert.doesNotMatch(html, /mission-rail|mission-checklist|Do this in Make Local/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);

@@ -323,8 +323,8 @@ export function Lobby() {
           <section className="welcome-card" aria-labelledby="welcome-title">
             <FigmaMark />
             <Badge text="5–10 minute quick tour" tone="brand" />
-            <h1 id="welcome-title">Learn Make Local one action at a time.</h1>
-            <p>Nine short tasks. You&apos;ll always see exactly what to do, where to do it, and when the change is complete.</p>
+            <h1 id="welcome-title">Design directly on your local code.</h1>
+            <p>Make Local opens a cloned Git repository as a live, editable preview in Figma. Point at rendered UI, guide an agent with context, and keep every change reviewable through branches, commits, and diffs.</p>
             <Button label="Start the quick tour" size="large" onClick={() => setScreen("active")} />
           </section>
         )}
