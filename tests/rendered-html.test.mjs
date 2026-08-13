@@ -20,6 +20,7 @@ test("server-renders the Make Local Lobby", async () => {
   assert.match(html, /Learn Make Local in the real interface/);
   assert.match(html, /The tour never clicks product controls for you/);
   assert.match(html, /Start the walkthrough/);
+  assert.match(html, /Try editing me/);
   assert.doesNotMatch(html, /Running locally|localhost · editable playground/);
   assert.match(html, /Figma MCP \+ team workflows/);
   assert.match(html, /Scope with intent/);

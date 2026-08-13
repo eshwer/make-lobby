@@ -85,7 +85,7 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
     kicker: "Point & Edit · 2 of 3",
     title: "Select the real CTA",
     body: "Point & Edit works on the rendered interface, not a separate mock. The highlighted button below is backed by the Button component in this repository.",
-    instruction: "Click Start designing and look for a blue selection outline plus component properties on the right.",
+    instruction: "Click the highlighted Try editing me button and look for a blue selection outline plus component properties on the right.",
     target: "cta",
     nextLabel: "The button is selected",
   },
@@ -353,12 +353,12 @@ export function Lobby() {
               <p>Explore freely in a safe branch. Every meaningful change becomes reviewable code, ready for your team.</p>
               <div className="hero-actions">
                 <Button
-                  label="Start designing"
+                  label="Try editing me"
                   size="medium"
                   className={walkthroughActive && activeStep.target === "cta" ? "tour-focus" : ""}
                   data-tour-target="hero-cta"
                 />
-                <span className="hero-hint">← Your first edit target</span>
+                <span className="hero-hint">← Select this with Point & Edit</span>
               </div>
             </div>
             <div className="hero-art" aria-hidden="true">
