@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 export type ButtonSize = "small" | "medium" | "large";
 export type ButtonVariant = "primary" | "secondary";
@@ -79,5 +79,25 @@ export function LabCard({
       <p>{children}</p>
       {showArrow && <span className="lab-arrow" aria-hidden="true">↗</span>}
     </article>
+  );
+}
+
+export type PointerDirection = "up" | "up-right" | "right" | "down-right" | "down" | "down-left" | "left" | "up-left";
+
+export interface PointerProps extends HTMLAttributes<HTMLDivElement> {
+  label: string;
+  direction?: PointerDirection;
+}
+
+export function Pointer({ label, direction = "up", className = "", ...props }: PointerProps) {
+  return (
+    <div
+      className={`tour-pointer tour-pointer--${direction} ${className}`.trim()}
+      data-direction={direction}
+      {...props}
+    >
+      <span className="tour-pointer__line" aria-hidden="true" />
+      <strong>{label}</strong>
+    </div>
   );
 }

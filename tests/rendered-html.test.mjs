@@ -23,12 +23,11 @@ test("server-renders the Make Local Lobby", async () => {
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });
 
-test("defines nine atomic guided actions with hybrid completion", async () => {
+test("defines eight atomic guided actions with hybrid completion", async () => {
   const source = await readFile(new URL("../app/lobby.tsx", import.meta.url), "utf8");
   const orderedSteps = [
     "Create a safe branch",
     "Make the button larger",
-    "Turn Edit off",
     "Inspect the change",
     "Restore the earlier version",
     "Pin the card you mean",
@@ -43,7 +42,7 @@ test("defines nine atomic guided actions with hybrid completion", async () => {
     previousIndex = index;
   }
   assert.equal((source.match(/completion: "manual"/g) ?? []).length, 5);
-  assert.match(source, /completion: "timed"/);
+  assert.doesNotMatch(source, /completion: "timed"/);
   assert.match(source, /completion: "button-large"/);
   assert.match(source, /completion: "button-medium"/);
   assert.match(source, /completion: "card-default"/);
@@ -77,6 +76,14 @@ test("defines current JSON code properties separately from Code Connect template
     assert.equal(json.source.componentName, component);
     await access(new URL(`../figma/${component}.figma.ts`, import.meta.url));
   }
+
+  const pointerFilename = propertyFiles.find((name) => name.startsWith("Pointer-") && name.endsWith(".json"));
+  assert.ok(pointerFilename, "missing hashed code-property definition for Pointer");
+  const pointer = JSON.parse(await readFile(new URL(pointerFilename, propertyDirectory), "utf8"));
+  assert.equal(pointer.source.componentName, "Pointer");
+  assert.deepEqual(pointer.codeProperties.direction.options, [
+    "up", "up-right", "right", "down-right", "down", "down-left", "left", "up-left",
+  ]);
 });
 
 test("ships real-product visual references for the guided missions", async () => {

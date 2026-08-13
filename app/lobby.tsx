@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Badge, Button, Card, LabCard } from "./components/ui";
+import { Badge, Button, Card, LabCard, Pointer, type PointerDirection } from "./components/ui";
 
 type TourTarget = "top-left" | "bottom-left" | "bottom-center" | "left" | "properties" | "toolbar-edit" | "toolbar-annotate" | "toolbar-copy";
 type TourVisual = "screenshot" | "edit-task" | "button" | "card";
@@ -135,15 +135,15 @@ const LABS = [
 
 const STORAGE_KEY = "make-local-lobby-guided-tour-v2";
 
-const TARGET_ARROWS: Record<TourTarget, string> = {
-  "top-left": "↖",
-  "bottom-left": "↙",
-  "bottom-center": "↓",
-  left: "←",
-  properties: "↗",
-  "toolbar-edit": "↑",
-  "toolbar-annotate": "↑",
-  "toolbar-copy": "↑",
+const TARGET_DIRECTIONS: Record<TourTarget, PointerDirection> = {
+  "top-left": "up-left",
+  "bottom-left": "down-left",
+  "bottom-center": "down",
+  left: "left",
+  properties: "up-right",
+  "toolbar-edit": "up",
+  "toolbar-annotate": "up",
+  "toolbar-copy": "up",
 };
 
 function FigmaMark() {
@@ -312,10 +312,12 @@ export function Lobby() {
     <main className="lobby-shell">
       <section className={`tour-stage tour-stage--${screen}`} aria-label="Make Local guided lobby">
         {screen === "active" && (
-          <div className={`edge-pointer edge-pointer--${pointerTarget}`} aria-hidden="true">
-            <span>{TARGET_ARROWS[pointerTarget]}</span>
-            <strong>{pointerLabel}</strong>
-          </div>
+          <Pointer
+            className={`edge-pointer edge-pointer--${pointerTarget}`}
+            direction={TARGET_DIRECTIONS[pointerTarget]}
+            label={pointerLabel}
+            aria-hidden="true"
+          />
         )}
 
         {screen === "welcome" && (
