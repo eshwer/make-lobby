@@ -23,7 +23,8 @@ test("server-renders the Make Local Lobby", async () => {
   assert.match(html, /Try editing me/);
   assert.match(html, /Select rendered UI and trace it back to the source that produced it/);
   assert.doesNotMatch(html, /Running locally|localhost · editable playground/);
-  assert.match(html, /Figma MCP \+ team workflows/);
+  assert.match(html, /Next experiments/);
+  assert.match(html, /Keep exploring/);
   assert.match(html, /Scope with intent/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });

@@ -204,12 +204,12 @@ const WALKTHROUGH_STEPS: WalkthroughStep[] = [
 ];
 
 const LABS = [
-  { number: "01", title: "Implement a Design", text: "Paste a focused Figma frame or file link into chat and ask the agent to implement it through Figma MCP. Watch the preview and diff update." },
-  { number: "02", title: "Scope with intent", text: "One component or section is faster to generate and review. Whole pages and system-wide changes take longer, so state the outcome and constraints up front." },
-  { number: "03", title: "Create the library", text: "If the Design library does not exist yet, use Figma MCP to establish its component and variable foundations before implementing the page." },
-  { number: "04", title: "Connect code to Design", text: "Use Figma MCP to inspect the library, then generate or verify Code Connect mappings so the right code components survive the handoff." },
-  { number: "05", title: "Try another branch", text: "Switch to tour/alternate-theme, compare the token changes, then return to your workshop branch." },
-  { number: "06", title: "Share for review", text: "Fork the repo, push your workshop branch, and open a pull request from Make Local." },
+  { number: "01", title: "Implement a Design", text: "Paste a focused Figma frame into chat and implement it with Figma MCP." },
+  { number: "02", title: "Scope with intent", text: "Start with one component or section. Smaller requests are faster to review." },
+  { number: "03", title: "Create the library", text: "Use Figma MCP to establish components and variables when a library is missing." },
+  { number: "04", title: "Connect code to Design", text: "Verify Code Connect mappings so the right components survive the handoff." },
+  { number: "05", title: "Try another branch", text: "Switch branches, compare the token changes, then return to your work." },
+  { number: "06", title: "Share for review", text: "Push your workshop branch and open a pull request for review." },
 ];
 
 const WALKTHROUGH_STORAGE_KEY = "make-local-lobby-traditional-walkthrough-v1";
@@ -433,7 +433,7 @@ export function Lobby() {
       )}
 
       <section className="labs-section" id="labs" aria-labelledby="labs-title">
-        <div className="labs-heading"><div><Badge text="Figma MCP + team workflows" tone="neutral" /><h2 id="labs-title">There&apos;s more to try!</h2></div><p>Paste a focused Design reference, watch it become local code, then grow into libraries and Code Connect. Smaller requests move faster; larger changes reward clear intent and patient review.</p></div>
+        <div className="labs-heading"><div><Badge text="Next experiments" tone="neutral" /><h2 id="labs-title">Keep exploring</h2></div><p>Use Figma MCP for focused Design-to-code work, then grow into libraries and Code Connect. Small, intentional requests are faster to build and review.</p></div>
         <div className="labs-grid">{LABS.map((lab) => <LabCard key={lab.number} number={lab.number} title={lab.title} showArrow={false}>{lab.text}</LabCard>)}</div>
       </section>
 
