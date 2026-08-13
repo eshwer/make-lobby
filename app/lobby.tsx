@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge, Button, Card, LabCard } from "./components/ui";
 
-type TourTarget = "top-left" | "bottom-left" | "bottom-center" | "left" | "right" | "toolbar-edit" | "toolbar-annotate" | "toolbar-copy";
+type TourTarget = "top-left" | "bottom-left" | "bottom-center" | "left" | "properties" | "toolbar-edit" | "toolbar-annotate" | "toolbar-copy";
 type TourVisual = "screenshot" | "edit-task" | "button" | "card";
 type CompletionMode = "manual" | "timed" | "button-large" | "button-medium" | "card-default";
 type TourScreen = "welcome" | "active" | "paused" | "complete";
@@ -41,9 +41,9 @@ const TOUR_STEPS: TourStep[] = [
     id: "make-button-large",
     mission: "Point & Edit",
     title: "Make the button larger",
-    instruction: "Click the Edit control shown below. Then select the blue button and change Size from Medium to Large.",
-    target: "toolbar-edit",
-    targetLabel: "Edit",
+    instruction: "Click Edit, select the blue button, then open Size in the upper-right properties panel and choose Large.",
+    target: "properties",
+    targetLabel: "Size property",
     visual: "edit-task",
     image: "/tour/edit-control-zoom.png",
     imageAlt: "Zoomed Make Local toolbar showing the Edit control selected.",
@@ -153,7 +153,7 @@ const TARGET_ARROWS: Record<TourTarget, string> = {
   "bottom-left": "↙",
   "bottom-center": "↓",
   left: "←",
-  right: "→",
+  properties: "↗",
   "toolbar-edit": "↑",
   "toolbar-annotate": "↑",
   "toolbar-copy": "↑",
@@ -359,6 +359,13 @@ export function Lobby() {
                 <div className={activeStep.visual === "button" || activeStep.visual === "edit-task" ? "live-target live-target--button is-visible" : "live-target live-target--button"}>
                   {activeStep.visual === "edit-task" && <span className="live-target__label">2 · Select this in the preview</span>}
                   <Button label="Try editing me" size="medium" data-tour-target="hero-cta" />
+                </div>
+              )}
+
+              {activeStep.visual === "edit-task" && (
+                <div className="property-change" aria-label="Change the Size property from Medium to Large">
+                  <span>3 · In Button properties</span>
+                  <div><strong>Size</strong><b>Medium</b><i aria-hidden="true">→</i><b className="is-target">Large</b></div>
                 </div>
               )}
 
