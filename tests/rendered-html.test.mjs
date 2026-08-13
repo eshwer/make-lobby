@@ -11,15 +11,15 @@ async function render() {
   }, { waitUntil() {}, passThroughOnException() {} });
 }
 
-test("server-renders the Make Local Lobby", async () => {
+test("server-renders Make on your codebase", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /<title>Make Local Lobby<\/title>/i);
+  assert.match(html, /<title>Make on your codebase<\/title>/i);
   assert.match(html, /Design directly on your local code/);
   assert.match(html, /live, editable preview in Figma/);
   assert.match(html, /Start the quick tour/);
-  assert.doesNotMatch(html, /mission-rail|mission-checklist|Do this in Make Local/);
+  assert.doesNotMatch(html, /mission-rail|mission-checklist|Do this on your codebase/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
 });
 
@@ -54,7 +54,7 @@ test("defines eight atomic guided actions with hybrid completion", async () => {
   assert.doesNotMatch(source, /toggleStep|checkedSteps|mission-checklist/);
 });
 
-test("ships the complete Make Local bootstrap contract", async () => {
+test("ships the complete codebase bootstrap contract", async () => {
   for (const name of ["setup", "install", "dev", "verify", "env", "dev.json"]) {
     await access(new URL(`../.figma/make/${name}`, import.meta.url));
   }

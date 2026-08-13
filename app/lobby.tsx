@@ -33,7 +33,7 @@ const TOUR_STEPS: TourStep[] = [
     targetLabel: "Branch picker",
     visual: "screenshot",
     image: "/tour/branch-picker.webp",
-    imageAlt: "Make Local branch picker showing main and Create branch.",
+    imageAlt: "Branch picker for making on your codebase, showing main and Create branch.",
     completion: "manual",
     confirmLabel: "I’m on my branch",
   },
@@ -46,7 +46,7 @@ const TOUR_STEPS: TourStep[] = [
     targetLabel: "Size property",
     visual: "edit-task",
     image: "/tour/edit-control-zoom.png",
-    imageAlt: "Zoomed Make Local toolbar showing the Edit control selected.",
+    imageAlt: "Zoomed codebase toolbar showing the Edit control selected.",
     completion: "button-large",
     detectionLabel: "Waiting for the rendered Button to become Large",
   },
@@ -59,7 +59,7 @@ const TOUR_STEPS: TourStep[] = [
     targetLabel: "Commits",
     visual: "screenshot",
     image: "/tour/commit-actions.webp",
-    imageAlt: "Make Local commit actions with View changes visible.",
+    imageAlt: "Codebase commit actions with View changes visible.",
     completion: "manual",
     confirmLabel: "I see the diff",
   },
@@ -105,7 +105,7 @@ const TOUR_STEPS: TourStep[] = [
     targetLabel: "Copy designs",
     visual: "screenshot",
     image: "/tour/copy-designs-control-zoom.png",
-    imageAlt: "Zoomed Make Local toolbar showing the purple highlighted Copy designs control.",
+    imageAlt: "Zoomed codebase toolbar showing the purple highlighted Copy designs control.",
     completion: "manual",
     confirmLabel: "Ready to send is visible",
   },
@@ -268,7 +268,7 @@ export function Lobby() {
     if (detected) return "Change detected — advancing";
     if (isSkippedStep) return "Skipped";
     if (isCompletedStep) return "Completed";
-    if (activeStep.completion === "manual") return "Complete this in Make Local, then confirm below.";
+    if (activeStep.completion === "manual") return "Complete this on your codebase, then confirm below.";
     return activeStep.detectionLabel;
   }, [activeStep, detected, isCompletedStep, isSkippedStep]);
 
@@ -310,7 +310,7 @@ export function Lobby() {
 
   return (
     <main className="lobby-shell">
-      <section className={`tour-stage tour-stage--${screen}`} aria-label="Make Local guided lobby">
+      <section className={`tour-stage tour-stage--${screen}`} aria-label="Make on your codebase guided lobby">
         {screen === "active" && (
           <Pointer
             className={`edge-pointer edge-pointer--${pointerTarget}`}
@@ -325,7 +325,7 @@ export function Lobby() {
             <FigmaMark />
             <Badge text="5–10 minute quick tour" tone="brand" />
             <h1 id="welcome-title">Design directly on your local code.</h1>
-            <p>Make Local opens a cloned Git repository as a live, editable preview in Figma. Point at rendered UI, guide an agent with context, and keep every change reviewable through branches, commits, and diffs.</p>
+            <p>Make on your codebase opens a cloned Git repository as a live, editable preview in Figma. Point at rendered UI, guide an agent with context, and keep every change reviewable through branches, commits, and diffs.</p>
             <Button label="Start the quick tour" size="large" onClick={() => setScreen("active")} />
           </section>
         )}
@@ -348,7 +348,7 @@ export function Lobby() {
               {activeStep.visual === "screenshot" && activeStep.image && (
                 // Native images preserve the exact pixels of the product-reference crops.
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={activeStep.image} alt={activeStep.imageAlt ?? "Make Local product reference"} />
+                <img src={activeStep.image} alt={activeStep.imageAlt ?? "Make on your codebase product reference"} />
               )}
 
               {activeStep.visual === "edit-task" && activeStep.image && (
@@ -415,7 +415,7 @@ export function Lobby() {
           <section className="complete-card" aria-labelledby="complete-title">
             <Badge text="Tour complete" tone="success" />
             <h1 id="complete-title">{skippedIds.length ? "You reached the end of the local ↔ Design tour." : "You completed the local ↔ Design loop."}</h1>
-            <p>{skippedIds.length ? "You explored Make Local’s branching, editing, review, annotation, and Design workflows. Restart whenever you want to try a skipped action." : "You branched safely, edited real components, reviewed and restored history, annotated with context, and sent the result to Design."}</p>
+            <p>{skippedIds.length ? "You explored branching, editing, review, annotation, and Design workflows on your codebase. Restart whenever you want to try a skipped action." : "You branched safely, edited real components, reviewed and restored history, annotated with context, and sent the result to Design."}</p>
             <div className="update-make-note">
               <div><span>Design → Make</span><strong>Changed the attached frame?</strong></div>
               <p>In Figma Design, choose <b>Update Make</b> in the frame toolbelt to send those changes back to Make.</p>

@@ -52,7 +52,7 @@
       },
       {
         "glob": ".figma/**",
-        "reason": "Figma tooling configuration, code-connect metadata, and Make Local setup scripts — not UI source."
+        "reason": "Figma tooling configuration, code-connect metadata, and codebase setup scripts — not UI source."
       },
       {
         "glob": ".wrangler/**",

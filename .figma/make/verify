@@ -15,14 +15,14 @@ while (Date.now() < deadline) {
   try {
     const response = await fetch(url)
     const html = await response.text()
-    if (response.ok && html.includes('Make Local Lobby')) {
-      console.log(`Make Local Lobby preview ready: ${url}`)
+    if (response.ok && html.includes('Make on your codebase')) {
+      console.log(`Make on your codebase preview ready: ${url}`)
       process.exit(0)
     }
   } catch {}
   await new Promise((resolve) => setTimeout(resolve, 500))
 }
 
-console.error(`Make Local Lobby preview did not become ready: ${url}`)
+console.error(`Make on your codebase preview did not become ready: ${url}`)
 process.exit(1)
 NODE

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Make Local Lobby",
-  description: "Branch, visually edit, review, and round-trip real code with Figma Make Local.",
+  title: "Make on your codebase",
+  description: "Branch, visually edit, review, and round-trip real code with Figma on your codebase.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

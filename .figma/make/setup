@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-node -e 'const [major, minor] = process.versions.node.split(".").map(Number); if (major < 22 || (major === 22 && minor < 13)) { console.error("Make Local Lobby requires Node.js 22.13 or newer."); process.exit(1) }'
-echo "Make Local Lobby system check passed"
+node -e 'const [major, minor] = process.versions.node.split(".").map(Number); if (major < 22 || (major === 22 && minor < 13)) { console.error("Make on your codebase requires Node.js 22.13 or newer."); process.exit(1) }'
+echo "Make on your codebase system check passed"
