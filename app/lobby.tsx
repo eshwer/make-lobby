@@ -105,7 +105,7 @@ const TOUR_STEPS: TourStep[] = [
     targetLabel: "Copy designs",
     visual: "screenshot",
     image: "/tour/copy-designs-control-zoom.png",
-    imageAlt: "Zoomed Make Local toolbar showing the outlined-layers Copy designs control.",
+    imageAlt: "Zoomed Make Local toolbar showing the purple highlighted Copy designs control.",
     completion: "manual",
     confirmLabel: "Ready to send is visible",
   },
