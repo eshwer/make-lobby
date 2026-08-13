@@ -187,14 +187,17 @@ export function Lobby() {
   const [screen, setScreen] = useState<TourScreen>("welcome");
   const [activeIndex, setActiveIndex] = useState(0);
   const [completedIds, setCompletedIds] = useState<string[]>([]);
+  const [skippedIds, setSkippedIds] = useState<string[]>([]);
   const [detected, setDetected] = useState(false);
   const [ready, setReady] = useState(false);
   const stepTitleRef = useRef<HTMLHeadingElement>(null);
 
   const activeStep = TOUR_STEPS[activeIndex];
-  const completedCount = completedIds.length;
-  const progress = Math.round((completedCount / TOUR_STEPS.length) * 100);
+  const resolvedCount = new Set([...completedIds, ...skippedIds]).size;
+  const progress = Math.round((resolvedCount / TOUR_STEPS.length) * 100);
   const isCompletedStep = completedIds.includes(activeStep.id);
+  const isSkippedStep = skippedIds.includes(activeStep.id);
+  const isResolvedStep = isCompletedStep || isSkippedStep;
 
   useEffect(() => {
     const hydrate = window.setTimeout(() => {
@@ -207,6 +210,7 @@ export function Lobby() {
           if (Number.isInteger(index) && index >= 0 && index < TOUR_STEPS.length) setActiveIndex(index);
           if (["welcome", "active", "paused", "complete"].includes(saved.screen)) setScreen(saved.screen);
           if (Array.isArray(saved.completedIds)) setCompletedIds(saved.completedIds.filter((id: string) => validIds.has(id)));
+          if (Array.isArray(saved.skippedIds)) setSkippedIds(saved.skippedIds.filter((id: string) => validIds.has(id)));
         }
       } catch {
         // Local progress is helpful, never required.
@@ -218,8 +222,8 @@ export function Lobby() {
 
   useEffect(() => {
     if (!ready) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, screen, activeIndex, completedIds }));
-  }, [activeIndex, completedIds, ready, screen]);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 3, screen, activeIndex, completedIds, skippedIds }));
+  }, [activeIndex, completedIds, ready, screen, skippedIds]);
 
   useEffect(() => {
     if (screen !== "active") return;
@@ -227,7 +231,7 @@ export function Lobby() {
   }, [activeIndex, screen]);
 
   useEffect(() => {
-    if (screen !== "active" || activeStep.completion === "manual" || isCompletedStep) return;
+    if (screen !== "active" || activeStep.completion === "manual" || isResolvedStep) return;
 
     let advanceTimer: number | undefined;
     let hasDetected = false;
@@ -262,7 +266,7 @@ export function Lobby() {
       if (advanceTimer) window.clearTimeout(advanceTimer);
       observer.disconnect();
     };
-  }, [activeStep, isCompletedStep, screen]);
+  }, [activeStep, isResolvedStep, screen]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -278,19 +282,29 @@ export function Lobby() {
 
   const statusCopy = useMemo(() => {
     if (detected) return "Change detected — advancing";
+    if (isSkippedStep) return "Skipped";
     if (isCompletedStep) return "Completed";
     if (activeStep.completion === "manual") return "Complete this in Make Local, then confirm below.";
     return activeStep.detectionLabel;
-  }, [activeStep, detected, isCompletedStep]);
+  }, [activeStep, detected, isCompletedStep, isSkippedStep]);
 
-  function completeCurrentStep() {
-    setCompletedIds((current) => current.includes(activeStep.id) ? current : [...current, activeStep.id]);
+  function advanceFromCurrentStep() {
     setDetected(false);
     if (activeIndex === TOUR_STEPS.length - 1) {
       setScreen("complete");
       return;
     }
     setActiveIndex((index) => index + 1);
+  }
+
+  function completeCurrentStep() {
+    if (!isResolvedStep) setCompletedIds((current) => [...current, activeStep.id]);
+    advanceFromCurrentStep();
+  }
+
+  function skipCurrentStep() {
+    setSkippedIds((current) => current.includes(activeStep.id) ? current : [...current, activeStep.id]);
+    advanceFromCurrentStep();
   }
 
   function goBack() {
@@ -302,6 +316,7 @@ export function Lobby() {
   function restartTour() {
     setActiveIndex(0);
     setCompletedIds([]);
+    setSkippedIds([]);
     setDetected(false);
     setScreen("welcome");
   }
@@ -379,16 +394,19 @@ export function Lobby() {
               )}
             </div>
 
-            <p className={detected ? "tour-status is-detected" : "tour-status"} aria-live="polite">
-              <span aria-hidden="true">{detected || isCompletedStep ? "✓" : activeStep.completion === "manual" ? "→" : "⌁"}</span>
-              {statusCopy}
-            </p>
+            <div className="tour-status-row">
+              <p className={detected ? "tour-status is-detected" : "tour-status"} aria-live="polite">
+                <span aria-hidden="true">{detected || isCompletedStep ? "✓" : isSkippedStep ? "↷" : activeStep.completion === "manual" ? "→" : "⌁"}</span>
+                {statusCopy}
+              </p>
+              {!isResolvedStep && !detected && <button type="button" className="tour-skip" onClick={skipCurrentStep}>Skip step</button>}
+            </div>
 
             <div className="tour-actions">
               <button type="button" className="tour-back" onClick={goBack}>Back</button>
-              {(activeStep.completion === "manual" || isCompletedStep) && (
+              {(activeStep.completion === "manual" || isResolvedStep) && (
                 <button type="button" className="tour-next" onClick={completeCurrentStep}>
-                  {isCompletedStep ? "Continue" : activeStep.confirmLabel}<span aria-hidden="true">→</span>
+                  {isResolvedStep ? "Continue" : activeStep.confirmLabel}<span aria-hidden="true">→</span>
                 </button>
               )}
             </div>
@@ -409,8 +427,8 @@ export function Lobby() {
         {screen === "complete" && (
           <section className="complete-card" aria-labelledby="complete-title">
             <Badge text="Tour complete" tone="success" />
-            <h1 id="complete-title">You completed the local ↔ Design loop.</h1>
-            <p>You branched safely, edited real components, reviewed and restored history, annotated with context, and sent the result to Design.</p>
+            <h1 id="complete-title">{skippedIds.length ? "You reached the end of the local ↔ Design tour." : "You completed the local ↔ Design loop."}</h1>
+            <p>{skippedIds.length ? "You explored Make Local’s branching, editing, review, annotation, and Design workflows. Restart whenever you want to try a skipped action." : "You branched safely, edited real components, reviewed and restored history, annotated with context, and sent the result to Design."}</p>
             <div className="update-make-note">
               <div><span>Design → Make</span><strong>Changed the attached frame?</strong></div>
               <p>In Figma Design, choose <b>Update Make</b> in the frame toolbelt to send those changes back to Make.</p>
