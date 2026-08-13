@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge, Button, Card, LabCard } from "./components/ui";
 
 type WalkthroughTarget =
@@ -310,12 +310,8 @@ export function Lobby() {
   const activeStep = WALKTHROUGH_STEPS[activeIndex];
   const actionableStepCount = WALKTHROUGH_STEPS.length - 2;
   const currentActionNumber = Math.min(Math.max(activeIndex, 0), actionableStepCount);
-  const completedMissionCount = Math.min(Math.max(activeStep.mission - 1, 0), 5);
-  const progress = Math.round((currentActionNumber / actionableStepCount) * 100);
   const isInPageTarget = activeStep.target === "cta" || activeStep.target === "card";
   const targetArrow = TARGET_ARROWS[activeStep.target];
-
-  const missionDots = useMemo(() => [1, 2, 3, 4, 5], []);
 
   function restartWalkthrough() {
     setValidationMessage("");
@@ -348,39 +344,7 @@ export function Lobby() {
 
   return (
     <main className="lobby-shell">
-      <header className="topbar">
-        <a className="brand" href="#top" aria-label="Make Local Lobby home">
-          <FigmaMark />
-          <span className="brand-name">Make Local</span>
-          <span className="brand-divider" />
-          <span className="brand-section">Guided lobby</span>
-        </a>
-        <div className="topbar-actions">
-          <span className="local-status"><i /> Running locally</span>
-          <button className="text-button" type="button" onClick={restartWalkthrough}>Restart walkthrough</button>
-        </div>
-      </header>
-
-      <section className="guided-intro" id="top">
-        <div>
-          <Badge text="Traditional product walkthrough" tone="brand" />
-          <h1>Learn by clicking the real thing.</h1>
-          <p>Follow one instruction at a time. Edge arrows point to Make Local controls surrounding this preview; spotlights identify editable elements inside the page.</p>
-        </div>
-        <div className="guided-progress" aria-label={`${progress}% of walkthrough complete`}>
-          <span>{currentActionNumber}/{actionableStepCount} actions</span>
-          <div><i style={{ width: `${progress}%` }} /></div>
-          <strong>{activeStep.mission > 0 && activeStep.mission <= 5 ? `Mission ${activeStep.mission} of 5` : activeStep.kicker}</strong>
-        </div>
-      </section>
-
       <section className="guided-workspace" aria-label="Editable playground">
-        <div className="canvas-toolbar">
-          <div><span className="canvas-dot canvas-dot--red" /><span className="canvas-dot canvas-dot--yellow" /><span className="canvas-dot canvas-dot--green" /></div>
-          <span>localhost · editable playground</span>
-          <Badge text="Live" tone="success" />
-        </div>
-
         <div className="guided-playground">
           <section className="hero-card" data-tour-target="hero-card">
             <div className="hero-copy">
@@ -427,12 +391,6 @@ export function Lobby() {
               }}
             />
           )}
-          <div className="walkthrough-mission-dots" aria-label="Walkthrough missions">
-            {missionDots.map((mission) => (
-              <span key={mission} className={mission < activeStep.mission || mission <= completedMissionCount ? "is-complete" : mission === activeStep.mission ? "is-active" : ""}>{mission}</span>
-            ))}
-          </div>
-
           {targetArrow && activeStep.targetLabel && (
             <div className={`edge-pointer edge-pointer--${activeStep.target}`}>
               <span className="edge-pointer__arrow" aria-hidden="true">{targetArrow}</span>
@@ -442,7 +400,7 @@ export function Lobby() {
 
           <section className={`walkthrough-card walkthrough-card--for-${activeStep.target}`} aria-labelledby="walkthrough-title">
             <div className="walkthrough-card__topline">
-              <span>{activeStep.kicker}</span>
+              <span>{activeStep.kicker} · {currentActionNumber}/{actionableStepCount}</span>
               <button type="button" onClick={() => setWalkthroughActive(false)} aria-label="Exit walkthrough">Exit ×</button>
             </div>
             <h2 id="walkthrough-title">{activeStep.title}</h2>
@@ -465,8 +423,12 @@ export function Lobby() {
       )}
 
       {!walkthroughActive && (
-        <button className="resume-walkthrough" type="button" onClick={() => setWalkthroughActive(true)}>
-          <span aria-hidden="true">▶</span> Resume guided walkthrough
+        <button
+          className="resume-walkthrough"
+          type="button"
+          onClick={activeIndex === WALKTHROUGH_STEPS.length - 1 ? restartWalkthrough : () => setWalkthroughActive(true)}
+        >
+          <span aria-hidden="true">▶</span> {activeIndex === WALKTHROUGH_STEPS.length - 1 ? "Restart walkthrough" : "Resume walkthrough"}
         </button>
       )}
 

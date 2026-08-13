@@ -16,11 +16,11 @@ test("server-renders the Make Local Lobby", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /<title>Make Local Lobby<\/title>/i);
-  assert.match(html, /Learn by clicking the real thing/);
-  assert.match(html, /Traditional product walkthrough/);
+  assert.match(html, /aria-label="Editable playground"/);
   assert.match(html, /Learn Make Local in the real interface/);
   assert.match(html, /The tour never clicks product controls for you/);
   assert.match(html, /Start the walkthrough/);
+  assert.doesNotMatch(html, /Running locally|localhost · editable playground/);
   assert.match(html, /Figma MCP \+ team workflows/);
   assert.match(html, /Scope with intent/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/i);
