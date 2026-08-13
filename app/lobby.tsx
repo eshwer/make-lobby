@@ -409,8 +409,12 @@ export function Lobby() {
         {screen === "complete" && (
           <section className="complete-card" aria-labelledby="complete-title">
             <Badge text="Tour complete" tone="success" />
-            <h1 id="complete-title">You used the full local-to-Design loop.</h1>
+            <h1 id="complete-title">You completed the local ↔ Design loop.</h1>
             <p>You branched safely, edited real components, reviewed and restored history, annotated with context, and sent the result to Design.</p>
+            <div className="update-make-note">
+              <div><span>Design → Make</span><strong>Changed the attached frame?</strong></div>
+              <p>In Figma Design, choose <b>Update Make</b> in the frame toolbelt to send those changes back to Make.</p>
+            </div>
             <button type="button" className="tour-back" onClick={restartTour}>Restart tour</button>
 
             <details className="more-to-try">
