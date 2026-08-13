@@ -333,7 +333,10 @@ export function Lobby() {
           <section className="tour-card" aria-labelledby="active-step-title">
             <div className="tour-card__topline">
               <span>Quick tour · Step {activeIndex + 1} of {TOUR_STEPS.length}</span>
-              <button type="button" onClick={() => setScreen("paused")}>Exit ×</button>
+              <div className="tour-card__controls">
+                <button type="button" onClick={restartTour}>Reset tour</button>
+                <button type="button" onClick={() => setScreen("paused")}>Exit ×</button>
+              </div>
             </div>
             <div className="tour-progress" aria-label={`${progress}% of tour complete`}><span style={{ width: `${progress}%` }} /></div>
             <p className="tour-mission">{activeStep.mission}</p>

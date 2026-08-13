@@ -60,6 +60,8 @@ button { color: inherit; font: inherit; }
 .tour-card__topline > span { font-weight: 650; }
 .tour-card__topline button { padding: 4px 0; border: 0; background: transparent; cursor: pointer; color: var(--muted); }
 .tour-card__topline button:hover { color: var(--ink); }
+.tour-card__controls { display: flex; align-items: center; gap: 14px; }
+.tour-card__controls button + button { padding-left: 14px; border-left: 1px solid var(--line); }
 .tour-progress { height: 6px; margin: 13px 0 26px; overflow: hidden; border-radius: 99px; background: #e8e8e3; }
 .tour-progress span { height: 100%; display: block; border-radius: inherit; background: var(--brand-blue); transition: width .3s ease; }
 .tour-mission { margin: 0 0 7px; color: var(--brand-blue-dark); font-size: 12px; font-weight: 720; letter-spacing: .075em; text-transform: uppercase; }

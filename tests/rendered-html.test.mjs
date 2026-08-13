@@ -48,6 +48,7 @@ test("defines nine atomic guided actions with hybrid completion", async () => {
   assert.match(source, /completion: "button-medium"/);
   assert.match(source, /completion: "card-default"/);
   assert.match(source, /MutationObserver/);
+  assert.match(source, />Reset tour<\/button>/);
   assert.doesNotMatch(source, /toggleStep|checkedSteps|mission-checklist/);
 });
 
