@@ -82,6 +82,7 @@ button { color: inherit; font: inherit; }
 .property-change b { min-height: 46px; padding: 11px 14px; display: flex; align-items: center; border: 1px solid #565653; border-radius: 8px; background: #393937; font-size: 18px; font-weight: 500; }
 .property-change i { color: #bdbdb8; font-size: 24px; font-style: normal; }
 .property-change b.is-target { border-color: var(--brand-blue); background: #103e5e; box-shadow: 0 0 0 3px rgba(13,153,255,.24); }
+.edit-off-note { margin: 12px 0 0; padding: 9px 11px; border-radius: 7px; background: #eaf5ff; color: #174d75; font-size: 13px; font-weight: 720; line-height: 1.35; }
 .live-target { display: none; }
 .live-target.is-visible { display: grid; place-items: center; }
 .live-target--button.is-visible { padding: 32px; }

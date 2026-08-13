@@ -5,7 +5,7 @@ import { Badge, Button, Card, LabCard } from "./components/ui";
 
 type TourTarget = "top-left" | "bottom-left" | "bottom-center" | "left" | "properties" | "toolbar-edit" | "toolbar-annotate" | "toolbar-copy";
 type TourVisual = "screenshot" | "edit-task" | "button" | "card";
-type CompletionMode = "manual" | "timed" | "button-large" | "button-medium" | "card-default";
+type CompletionMode = "manual" | "button-large" | "button-medium" | "card-default";
 type TourScreen = "welcome" | "active" | "paused" | "complete";
 
 type TourStep = {
@@ -41,7 +41,7 @@ const TOUR_STEPS: TourStep[] = [
     id: "make-button-large",
     mission: "Point & Edit",
     title: "Make the button larger",
-    instruction: "Click Edit, select the blue button, then open Size in the upper-right properties panel and choose Large.",
+    instruction: "Click Edit, select the blue button, then choose Large in the upper-right Size property. Turn Edit off again before you click Continue.",
     target: "properties",
     targetLabel: "Size property",
     visual: "edit-task",
@@ -49,19 +49,6 @@ const TOUR_STEPS: TourStep[] = [
     imageAlt: "Zoomed Make Local toolbar showing the Edit control selected.",
     completion: "button-large",
     detectionLabel: "Waiting for the rendered Button to become Large",
-  },
-  {
-    id: "turn-off-edit",
-    mission: "Point & Edit",
-    title: "Turn Edit off",
-    instruction: "Click the highlighted Edit control again so the preview returns to normal interaction.",
-    target: "toolbar-edit",
-    targetLabel: "Edit",
-    visual: "screenshot",
-    image: "/tour/edit-control-zoom.png",
-    imageAlt: "Zoomed Make Local toolbar showing the selected Edit control.",
-    completion: "timed",
-    detectionLabel: "The next step will open automatically — no page click needed",
   },
   {
     id: "inspect-change",
@@ -198,6 +185,9 @@ export function Lobby() {
   const isCompletedStep = completedIds.includes(activeStep.id);
   const isSkippedStep = skippedIds.includes(activeStep.id);
   const isResolvedStep = isCompletedStep || isSkippedStep;
+  const needsEditOff = activeStep.id === "make-button-large" && isCompletedStep;
+  const pointerTarget: TourTarget = needsEditOff ? "toolbar-edit" : activeStep.target;
+  const pointerLabel = needsEditOff ? "Turn Edit off" : activeStep.targetLabel;
 
   useEffect(() => {
     const hydrate = window.setTimeout(() => {
@@ -236,19 +226,12 @@ export function Lobby() {
     let advanceTimer: number | undefined;
     let hasDetected = false;
 
-    if (activeStep.completion === "timed") {
-      advanceTimer = window.setTimeout(() => {
-        setCompletedIds((current) => current.includes(activeStep.id) ? current : [...current, activeStep.id]);
-        setActiveIndex((index) => Math.min(index + 1, TOUR_STEPS.length - 1));
-      }, 4200);
-      return () => window.clearTimeout(advanceTimer);
-    }
-
     function checkForChange() {
       if (hasDetected || !isExpectedChange(activeStep)) return;
       hasDetected = true;
       setDetected(true);
       setCompletedIds((current) => current.includes(activeStep.id) ? current : [...current, activeStep.id]);
+      if (activeStep.completion === "button-large") return;
       advanceTimer = window.setTimeout(() => {
         setDetected(false);
         setActiveIndex((index) => Math.min(index + 1, TOUR_STEPS.length - 1));
@@ -281,6 +264,7 @@ export function Lobby() {
   }, [activeIndex, screen]);
 
   const statusCopy = useMemo(() => {
+    if (activeStep.id === "make-button-large" && (detected || isCompletedStep)) return "Button is Large — turn Edit off, then Continue.";
     if (detected) return "Change detected — advancing";
     if (isSkippedStep) return "Skipped";
     if (isCompletedStep) return "Completed";
@@ -328,9 +312,9 @@ export function Lobby() {
     <main className="lobby-shell">
       <section className={`tour-stage tour-stage--${screen}`} aria-label="Make Local guided lobby">
         {screen === "active" && (
-          <div className={`edge-pointer edge-pointer--${activeStep.target}`} aria-hidden="true">
-            <span>{TARGET_ARROWS[activeStep.target]}</span>
-            <strong>{activeStep.targetLabel}</strong>
+          <div className={`edge-pointer edge-pointer--${pointerTarget}`} aria-hidden="true">
+            <span>{TARGET_ARROWS[pointerTarget]}</span>
+            <strong>{pointerLabel}</strong>
           </div>
         )}
 
@@ -384,6 +368,7 @@ export function Lobby() {
                 <div className="property-change" aria-label="Change the Size property from Medium to Large">
                   <span>3 · In Button properties</span>
                   <div><strong>Size</strong><b>Medium</b><i aria-hidden="true">→</i><b className="is-target">Large</b></div>
+                  <p className="edit-off-note">4 · Turn Edit off again, then click Continue</p>
                 </div>
               )}
 
