@@ -82,6 +82,8 @@ const TOUR_STEPS: TourStep[] = [
     target: "toolbar-annotate",
     targetLabel: "Annotate",
     visual: "card",
+    image: "/tour/annotate-control-zoom.png",
+    imageAlt: "Zoomed codebase toolbar showing the purple highlighted Annotate control.",
     completion: "manual",
     confirmLabel: "The annotation is submitted",
   },
@@ -344,7 +346,7 @@ export function Lobby() {
             <h1 id="active-step-title" ref={stepTitleRef} tabIndex={-1}>{activeStep.title}</h1>
             <p className="tour-instruction">{activeStep.instruction}</p>
 
-            <div className={`tour-visual tour-visual--${activeStep.visual}`}>
+            <div className={`tour-visual tour-visual--${activeStep.visual} ${activeStep.id === "pin-card" ? "tour-visual--annotate-task" : ""}`.trim()}>
               {activeStep.visual === "screenshot" && activeStep.image && (
                 // Native images preserve the exact pixels of the product-reference crops.
                 // eslint-disable-next-line @next/next/no-img-element
@@ -356,6 +358,14 @@ export function Lobby() {
                   <span>1 · Click Edit in the toolbar</span>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={activeStep.image} alt={activeStep.imageAlt ?? "Zoomed Edit control"} />
+                </div>
+              )}
+
+              {activeStep.id === "pin-card" && activeStep.image && (
+                <div className="annotate-control-zoom">
+                  <span>1 · Turn on Annotate</span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={activeStep.image} alt={activeStep.imageAlt ?? "Zoomed Annotate control"} />
                 </div>
               )}
 
@@ -376,6 +386,7 @@ export function Lobby() {
 
               {showCardTarget && (
                 <div data-tour-target="editable-card" className={activeStep.visual === "card" ? "live-target live-target--card is-visible" : "live-target live-target--card"}>
+                  {activeStep.id === "pin-card" && <span className="live-target__label">2 · Select this card</span>}
                   <Card eyebrow="Editable Card" title="Point at what you mean" icon="⌖" emphasis="brand">Use this real component for the annotation task.</Card>
                 </div>
               )}

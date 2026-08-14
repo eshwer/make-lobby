@@ -91,5 +91,6 @@ test("ships real-product visual references for the guided missions", async () =>
     await access(new URL(`../public/tour/${image}.webp`, import.meta.url));
   }
   await access(new URL("../public/tour/edit-control-zoom.png", import.meta.url));
+  await access(new URL("../public/tour/annotate-control-zoom.png", import.meta.url));
   await access(new URL("../public/tour/copy-designs-control-zoom.png", import.meta.url));
 });
