@@ -13,25 +13,25 @@
       ],
       "deprioritize": [
         "app/globals.css",
+        "worker/**",
+        "next.config.ts",
+        "vite.config.ts",
         "app/components/ui.tsx"
       ],
       "local-library": [],
       "external-library": [],
       "exclude": [
-        "figma/**",
-        "tests/**",
-        "worker/**",
+        "figma/*.figma.ts",
+        "figma/*.figma.tsx",
+        "figma/*.figma.js",
+        "figma/*.figma.jsx",
+        "node_modules/**",
         ".figma/**",
         ".wrangler/**",
         "public/**",
-        "node_modules/**",
+        "tests/**",
         "dist/**",
-        "*.config.ts",
-        "*.config.mjs",
-        "next-env.d.ts",
-        "tsconfig.json",
-        "package.json",
-        "package-lock.json"
+        ".next/**"
       ]
     },
     "pathClassification": {
@@ -39,60 +39,48 @@
     },
     "exclusions": [
       {
-        "glob": "figma/**",
-        "reason": "Code Connect mapping files (*.figma.ts) map Figma design components to code implementations but do not own rendered UI and must not be selected as point-and-edit source anchors."
+        "glob": "figma/*.figma.ts",
+        "reason": "Code Connect mapping files map Figma design components to code snippets but do not own rendered UI and must not be selected as point-and-edit source anchors."
       },
       {
-        "glob": "tests/**",
-        "reason": "Test files are not UI source anchors; they assert behavior but do not participate in rendering."
+        "glob": "figma/*.figma.tsx",
+        "reason": "Code Connect mapping files (TSX variant); same rationale as *.figma.ts."
       },
       {
-        "glob": "worker/**",
-        "reason": "Cloudflare Worker server entry point — server-side infrastructure, not involved in rendering UI components."
+        "glob": "figma/*.figma.js",
+        "reason": "Code Connect mapping files (JS variant); same rationale as *.figma.ts."
       },
       {
-        "glob": ".figma/**",
-        "reason": "Figma tooling configuration, code-connect metadata, and codebase setup scripts — not UI source."
-      },
-      {
-        "glob": ".wrangler/**",
-        "reason": "Wrangler build state and cache files — not UI source."
-      },
-      {
-        "glob": "public/**",
-        "reason": "Static assets (images, SVGs) — not UI source anchors."
+        "glob": "figma/*.figma.jsx",
+        "reason": "Code Connect mapping files (JSX variant); same rationale as *.figma.ts."
       },
       {
         "glob": "node_modules/**",
-        "reason": "External dependencies — immutable in this project and not UI source anchors for point-and-edit edits."
+        "reason": "External dependencies managed by npm; their implementations are immutable in this project and are not UI source anchors."
+      },
+      {
+        "glob": ".figma/**",
+        "reason": "Figma tooling config and generated code-properties JSON; not UI source anchors."
+      },
+      {
+        "glob": ".wrangler/**",
+        "reason": "Cloudflare Wrangler build artifacts and state; not UI source anchors."
+      },
+      {
+        "glob": "public/**",
+        "reason": "Static assets (images, favicon); not UI source anchors."
+      },
+      {
+        "glob": "tests/**",
+        "reason": "Test files; not UI source anchors."
       },
       {
         "glob": "dist/**",
-        "reason": "Build output — generated, not authored UI source."
+        "reason": "Build output; not UI source anchors."
       },
       {
-        "glob": "*.config.ts",
-        "reason": "Tooling configuration files (vite.config.ts, next.config.ts) — not UI source anchors."
-      },
-      {
-        "glob": "*.config.mjs",
-        "reason": "Tooling configuration files (eslint.config.mjs) — not UI source anchors."
-      },
-      {
-        "glob": "next-env.d.ts",
-        "reason": "Auto-generated Next.js TypeScript environment declarations — not UI source."
-      },
-      {
-        "glob": "tsconfig.json",
-        "reason": "TypeScript compiler configuration — not a UI source anchor."
-      },
-      {
-        "glob": "package.json",
-        "reason": "Package manifest — not a UI source anchor."
-      },
-      {
-        "glob": "package-lock.json",
-        "reason": "Lockfile — not a UI source anchor."
+        "glob": ".next/**",
+        "reason": "Next.js build output cache; not UI source anchors."
       }
     ],
     "generated": {
@@ -100,9 +88,9 @@
       "source": "setup-agent.point-and-edit-path-classifier",
       "prompt": "same-turn-setup-subagent-v3",
       "model": "claude-sonnet-4-6",
-      "createdAt": "2026-08-12T00:00:00.000Z",
+      "createdAt": "2026-08-14T00:00:00.000Z",
       "confidence": 0.97,
-      "explanation": "The repository is a small, well-structured single-app Next.js/Vite project with clear separation between the active composition surface (app/lobby.tsx, app/page.tsx), a local-library component file (app/components/ui.tsx with stable exports and Code Connect mappings), and Code Connect mapping files in figma/ that must be excluded — boundaries are unambiguous and confidence is very high."
+      "explanation": "The repository is a single-page Next.js app with a clear active composition surface (app/lobby.tsx), a small shared UI primitive file with Code Connect mappings (app/components/ui.tsx), and no ambiguity about inactive apps, monorepo packages, or complex directory layouts."
     }
   }
 }
