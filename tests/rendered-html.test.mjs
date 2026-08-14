@@ -51,6 +51,8 @@ test("defines eight atomic guided actions with hybrid completion", async () => {
   assert.match(source, />Skip step<\/button>/);
   assert.match(source, /skippedIds/);
   assert.match(source, /Update Make/);
+  assert.match(source, /Your repo is now set up/);
+  assert.match(source, /Take me to the repo/);
   assert.doesNotMatch(source, /toggleStep|checkedSteps|mission-checklist/);
 });
 

@@ -441,6 +441,14 @@ export function Lobby() {
             </details>
           </section>
         )}
+
+        {screen === "complete" && (
+          <aside className="repo-ready-toast" role="status" aria-label="Repository ready">
+            <span className="repo-ready-toast__icon" aria-hidden="true">✓</span>
+            <strong>Your repo is now set up.</strong>
+            <a href="https://github.com/eshwer/make-lobby" target="_blank" rel="noreferrer">Take me to the repo <span aria-hidden="true">↗</span></a>
+          </aside>
+        )}
       </section>
     </main>
   );
