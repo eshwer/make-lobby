@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "componentName": "Pointer",
+    "filePath": "app/components/ui.tsx"
+  },
+  "codeProperties": {
+    "label": {
+      "name": "Label",
+      "description": "The text label displayed by the pointer.",
+      "type": "string"
+    },
+    "direction": {
+      "name": "Direction",
+      "type": "string",
+      "defaultValue": "up",
+      "options": [
+        "up",
+        "up-right",
+        "right",
+        "down-right",
+        "down",
+        "down-left",
+        "left",
+        "up-left"
+      ],
+      "control": {
+        "type": "select",
+        "labels": {
+          "up": "Up",
+          "up-right": "Up Right",
+          "right": "Right",
+          "down-right": "Down Right",
+          "down": "Down",
+          "down-left": "Down Left",
+          "left": "Left",
+          "up-left": "Up Left"
+        }
+      }
+    }
+  }
+}
